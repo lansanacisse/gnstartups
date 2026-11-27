@@ -93,7 +93,7 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .drawer-nav a b{font-weight:600;font-size:var(--fs-l)}
 .drawer-nav a span{font-size:var(--fs-s);color:var(--mute)}
 .drawer-nav a.on{background:var(--soft)}
-.drawer-nav a.on b::after{content:" · page actuelle" / "";font-weight:400;font-size:var(--fs-s);color:var(--mute)}
+.drawer-nav a.on b::after{content:" (page actuelle)" / "";font-weight:400;font-size:var(--fs-s);color:var(--mute)}
 .drawer-foot{margin-top:auto;padding:var(--s4) var(--s3) 0;border-top:1px solid var(--line);font-size:15px}
 
 /* Panneau de filtres (téléphone) */
