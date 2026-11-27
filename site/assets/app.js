@@ -54,6 +54,19 @@ const finLabel = s => {
   return tot ? `${usd(tot)} (${n})` : n;
 };
 
+/* Panneau de filtres du téléphone, commun au répertoire et aux financements */
+const FILTER_BTN = '<button type="button" id="open-filters" class="filter-btn narrow-flex" aria-haspopup="dialog" aria-controls="fsheet"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtres<span class="n" id="fcount"></span></button>';
+function bindSheet() {
+  const sheet = document.getElementById('fsheet'), btn = document.getElementById('open-filters');
+  btn.addEventListener('click', () => sheet.showModal());
+  sheet.addEventListener('click', e => { if (e.target === sheet || e.target.closest('[data-close-sheet]')) sheet.close(); });
+  sheet.addEventListener('close', () => btn.focus());
+}
+function setFilterCount(active) {
+  const fc = document.getElementById('fcount'); if (fc) fc.textContent = active ? String(active) : '';
+  const ob = document.getElementById('open-filters'); if (ob) ob.setAttribute('aria-label', active ? `Filtres, ${active} actif${active > 1 ? 's' : ''}` : 'Filtres');
+}
+
 /* Répertoire */
 const STATUTS = [['tous', 'Toutes'], ['active', 'Actives'], ['levee', 'En levée'], ['interrompue', 'Interrompues'], ['fermee', 'Fermées'], ['a_verifier', 'À vérifier']];
 const matchStatut = (s, k) => k === 'tous' || (k === 'levee' ? s.statut_financement === 'en_cours_declare' : k === 'a_verifier' ? s.statut_verification !== 'verifiee' : s.statut_activite === k);
@@ -72,7 +85,7 @@ function repertoire() {
    <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Rechercher" value="${esc(st.q)}" autocomplete="off"></label>
    <label class="field wide-flex"><span class="label">Secteur</span><select id="secteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
    <label class="field wide-flex"><span class="label">Ville</span><select id="ville" data-k="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</label>
-   <button type="button" id="open-filters" class="filter-btn narrow-flex" aria-haspopup="dialog" aria-controls="fsheet"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtres<span class="n" id="fcount"></span></button>
+   ${FILTER_BTN}
   </div>
   <div class="toolbar"><div class="seg wide-flex" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${n(x[0])}</span></button>`).join('')}</div>
    <div class="result"><span id="rc" aria-live="polite"></span><button type="button" id="reset" class="linkbtn">Réinitialiser les filtres</button></div></div>
@@ -86,14 +99,11 @@ function repertoire() {
    <label class="sheet-field"><span>Ville</span><span class="field"><select id="mville" data-k="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</span></label>
    <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
   </dialog></div>`;
-  const sheet = document.getElementById('fsheet');
   document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; list(); });
   view.querySelectorAll('select[data-k]').forEach(sel => sel.addEventListener('change', e => { st[e.target.dataset.k] = e.target.value; syncControls(); list(); }));
   view.querySelectorAll('input[name=mstatut]').forEach(r => r.addEventListener('change', e => { st.statut = e.target.value; list(); }));
-  document.getElementById('open-filters').addEventListener('click', () => sheet.showModal());
   document.getElementById('mreset').addEventListener('click', () => { Object.assign(st, { secteur: '', ville: '', statut: 'tous' }); syncControls(); list(); });
-  sheet.addEventListener('click', e => { if (e.target === sheet || e.target.closest('[data-close-sheet]')) sheet.close(); });
-  sheet.addEventListener('close', () => document.getElementById('open-filters').focus());
+  bindSheet();
   list();
 }
 /* Les filtres existent en deux présentations (barre sur ordinateur, panneau sur téléphone) : on garde les deux en phase */
@@ -107,9 +117,7 @@ function list() {
     (!q || [s.nom, s.description, ...s.fondateurs.map(x => x.nom)].join(' ').toLowerCase().includes(q)));
   document.querySelectorAll('[data-statut]').forEach(b => { const on = b.dataset.statut === st.statut; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
   document.querySelectorAll('input[name=mstatut]').forEach(r => { r.checked = r.value === st.statut; });
-  const active = (st.statut !== 'tous') + !!st.secteur + !!st.ville;
-  const fc = document.getElementById('fcount'); if (fc) fc.textContent = active ? String(active) : '';
-  const ob = document.getElementById('open-filters'); if (ob) ob.setAttribute('aria-label', active ? `Filtres, ${active} actif${active > 1 ? 's' : ''}` : 'Filtres');
+  setFilterCount((st.statut !== 'tous') + !!st.secteur + !!st.ville);
   document.getElementById('list').innerHTML = f.map(s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
    <div class="entry-head"><h2>${esc(s.nom)}</h2>${status(s.statut_activite)}</div>
    <p class="entry-meta">${esc(s.secteur)} · ${esc(s.ville)}${s.annee_creation ? ' · ' + s.annee_creation : ''}</p>
@@ -173,17 +181,37 @@ function financements() {
   const known = done.filter(r => r.montant != null).length;
   const pending = R.filter(r => r.statut === 'en_cours_declare').length;
   const types = [...new Set(R.map(r => r.type_financement))];
+  const nt = t => R.filter(r => r.type_financement === t).length;
   view.innerHTML = `<div class="stack">
   <div><h1 tabindex="-1">Financements documentés</h1><p class="intro">Investissements, subventions, prix et dette, chacun avec sa source. Les montants sont affichés dans leur devise d’origine ; les totaux utilisent la contre-valeur en dollars.</p></div>
   <p class="summary"><b>${usd(tot)}</b> documentés sur <b>${done.length}</b> opération${done.length > 1 ? 's' : ''}${known < done.length ? `, dont ${known} avec un montant connu` : ''}. <b>${pending}</b> levée${pending > 1 ? 's' : ''} en cours déclarée${pending > 1 ? 's' : ''}.</p>
-  <div class="seg" role="group" aria-label="Filtrer par type de financement"><button type="button" data-ftype="" aria-pressed="false">Tous</button>${types.map(t => `<button type="button" data-ftype="${esc(t)}" aria-pressed="false">${esc(lab('type_financement', t))}</button>`).join('')}</div>
+  <div class="toolbar with-btn"><div class="seg wide-flex" role="group" aria-label="Filtrer par type de financement"><button type="button" data-ftype="" aria-pressed="false">Tous <span class="count">${R.length}</span></button>${types.map(t => `<button type="button" data-ftype="${esc(t)}" aria-pressed="false">${esc(lab('type_financement', t))} <span class="count">${nt(t)}</span></button>`).join('')}</div>
+   <div class="result"><span id="frc" aria-live="polite"></span><button type="button" id="freset" class="linkbtn">Réinitialiser</button></div>${FILTER_BTN}</div>
+  <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
+   <div class="sheet-head"><h2 id="fs-title">Filtrer les financements</h2><button type="button" class="linkbtn" data-close-sheet>Fermer</button></div>
+   <fieldset class="opts"><legend>Type de financement</legend>
+    <label class="opt"><input type="radio" name="mftype" value=""${!st.ftype ? ' checked' : ''}><span>Tous</span><span class="count">${R.length}</span></label>
+    ${types.map(t => `<label class="opt"><input type="radio" name="mftype" value="${esc(t)}"${st.ftype === t ? ' checked' : ''}><span>${esc(lab('type_financement', t))}</span><span class="count">${nt(t)}</span></label>`).join('')}
+   </fieldset>
+   <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
+  </dialog>
   <div class="scroll"><table class="rtable"><caption class="sr">Opérations de financement, de la plus récente à la plus ancienne</caption>
   <thead><tr><th scope="col">Date</th><th scope="col">Startup</th><th scope="col">Type</th><th scope="col" class="num">Montant</th><th scope="col">Financeurs</th><th scope="col">Source</th></tr></thead><tbody id="rounds"></tbody></table></div></div>`;
+  view.querySelectorAll('input[name=mftype]').forEach(r => r.addEventListener('change', e => { st.ftype = e.target.value; rounds(); }));
+  document.getElementById('mreset').addEventListener('click', () => { st.ftype = ''; rounds(); });
+  bindSheet();
   rounds();
 }
 function rounds() {
+  const R = D.financements, f = R.filter(r => !st.ftype || r.type_financement === st.ftype);
   document.querySelectorAll('[data-ftype]').forEach(b => { const on = b.dataset.ftype === st.ftype; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-  document.getElementById('rounds').innerHTML = D.financements.filter(r => !st.ftype || r.type_financement === st.ftype).map(r => `<tr>
+  document.querySelectorAll('input[name=mftype]').forEach(r => { r.checked = r.value === st.ftype; });
+  const label = n => n + ' opération' + (n > 1 ? 's' : '');
+  document.getElementById('frc').textContent = `${label(f.length)} sur ${R.length}`;
+  document.getElementById('freset').hidden = !st.ftype;
+  document.getElementById('mshow').textContent = f.length ? `Voir ${label(f.length)}` : 'Aucune opération';
+  setFilterCount(st.ftype ? 1 : 0);
+  document.getElementById('rounds').innerHTML = f.map(r => `<tr>
    <td data-l="Date" class="nowrap mute">${fdate(r.date)}</td><td data-l="Startup"><a href="#fiche-${esc(r.startup_id)}"><b>${esc(r.startup)}</b></a></td>
    <td data-l="Type">${kind(r)}${r.statut === 'en_cours_declare' ? ' ' + flag('En cours', 'fl-info') : ''}</td><td data-l="Montant" class="num"><b>${money(r.montant, r.devise)}</b></td>
    <td data-l="Financeurs">${esc(r.investisseurs.join(', ')) || '<span class="mute">Non communiqués</span>'}</td><td data-l="Source">${srcLine(r.sources, false)}</td></tr>`).join('');
@@ -274,6 +302,7 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.statut !== undefined) { st.statut = b.dataset.statut; list(); }
   else if (b.dataset.ftype !== undefined) { st.ftype = b.dataset.ftype; rounds(); }
+  else if (b.id === 'freset') { st.ftype = ''; rounds(); }
   else if (b.id === 'reset') {
     Object.assign(st, { q: '', secteur: '', ville: '', statut: 'tous' });
     syncControls(); list(); document.getElementById('q').focus();

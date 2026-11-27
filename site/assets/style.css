@@ -208,6 +208,7 @@ dl.defs{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--s
   .seg{width:auto;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
   .seg::-webkit-scrollbar{display:none}
   .result{width:100%;justify-content:space-between}
+  .toolbar.with-btn{flex-wrap:nowrap}.toolbar.with-btn .result{width:auto;flex:1 1 auto;white-space:nowrap}.toolbar.with-btn #freset{display:none}
   .linkbtn{min-height:36px}
   .entries{gap:var(--s2)}
   .entry{padding:14px var(--s4);gap:6px}
