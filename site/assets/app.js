@@ -35,7 +35,7 @@ const chev = '<svg class="chev" aria-hidden="true" width="14" height="14" viewBo
 const searchIco = '<svg class="ico" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
 let D = null;
-const st = { q: '', secteur: '', ville: '', statut: 'tous', ftype: '' };
+const st = { q: '', secteur: '', statut: 'tous', ftype: '' };
 const view = document.getElementById('view');
 
 /* Exceptions à signaler sur une fiche : le statut principal est affiché à part */
@@ -82,7 +82,6 @@ function repertoire() {
   const S = D.startups;
   const opt = (arr, v, all) => `<option value="">${all}</option>` + arr.map(x => `<option value="${esc(x.id)}"${x.id === v ? ' selected' : ''}>${esc(x.libelle || x.nom)}</option>`).join('');
   const usedS = D.secteurs.filter(x => S.some(s => s.secteur_id === x.id));
-  const usedV = D.villes.filter(x => S.some(s => s.ville_id === x.id));
   const n = k => S.filter(s => matchStatut(s, k)).length;
   view.innerHTML = `<div class="stack">
   <div class="page-head"><div><h1 tabindex="-1">Répertoire des startups guinéennes</h1>
@@ -91,10 +90,10 @@ function repertoire() {
   <div class="filters" role="search">
    <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Rechercher" value="${esc(st.q)}" autocomplete="off"></label>
    <label class="field wide-flex"><span class="label">Secteur</span><select id="secteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
-   <label class="field wide-flex"><span class="label">Ville</span><select id="ville" data-k="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</label>
+   <div class="seg wide-flex" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${n(x[0])}</span></button>`).join('')}</div>
    ${FILTER_BTN}
   </div>
-  <div class="toolbar"><div class="seg wide-flex" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${n(x[0])}</span></button>`).join('')}</div>
+  <div class="toolbar">
    <div class="result"><span id="rc" aria-live="polite"></span><button type="button" id="reset" class="linkbtn">Réinitialiser les filtres</button></div></div>
   <ul class="entries" id="list"></ul><p class="empty" id="empty" hidden>Aucune startup ne correspond à ces filtres.</p>
   <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
@@ -103,13 +102,12 @@ function repertoire() {
     ${STATUTS.map(x => `<label class="opt"><input type="radio" name="mstatut" value="${x[0]}"${st.statut === x[0] ? ' checked' : ''}><span>${x[1]}</span><span class="count">${n(x[0])}</span></label>`).join('')}
    </fieldset>
    <label class="sheet-field"><span>Secteur</span><span class="field"><select id="msecteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</span></label>
-   <label class="sheet-field"><span>Ville</span><span class="field"><select id="mville" data-k="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</span></label>
    <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
   </dialog></div>`;
   document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; list(); });
   view.querySelectorAll('select[data-k]').forEach(sel => sel.addEventListener('change', e => { st[e.target.dataset.k] = e.target.value; syncControls(); list(); }));
   view.querySelectorAll('input[name=mstatut]').forEach(r => r.addEventListener('change', e => { st.statut = e.target.value; list(); }));
-  document.getElementById('mreset').addEventListener('click', () => { Object.assign(st, { secteur: '', ville: '', statut: 'tous' }); syncControls(); list(); });
+  document.getElementById('mreset').addEventListener('click', () => { Object.assign(st, { secteur: '', statut: 'tous' }); syncControls(); list(); });
   bindSheet();
   list();
 }
@@ -120,16 +118,16 @@ function syncControls() {
 }
 function list() {
   const q = st.q.trim().toLowerCase();
-  const f = D.startups.filter(s => (!st.secteur || s.secteur_id === st.secteur) && (!st.ville || s.ville_id === st.ville) && matchStatut(s, st.statut) &&
+  const f = D.startups.filter(s => (!st.secteur || s.secteur_id === st.secteur) && matchStatut(s, st.statut) &&
     (!q || [s.nom, s.description, ...s.fondateurs.map(x => x.nom)].join(' ').toLowerCase().includes(q)));
   document.querySelectorAll('[data-statut]').forEach(b => { const on = b.dataset.statut === st.statut; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
   document.querySelectorAll('input[name=mstatut]').forEach(r => { r.checked = r.value === st.statut; });
-  setFilterCount((st.statut !== 'tous') + !!st.secteur + !!st.ville);
+  setFilterCount((st.statut !== 'tous') + !!st.secteur);
   document.getElementById('list').innerHTML = f.map(entryCard).join('');
   document.getElementById('empty').hidden = f.length > 0;
   document.getElementById('rc').textContent = f.length + ' fiche' + (f.length > 1 ? 's' : '') + ' sur ' + D.startups.length;
   const ms = document.getElementById('mshow'); if (ms) ms.textContent = f.length ? `Voir ${f.length} fiche${f.length > 1 ? 's' : ''}` : 'Aucune fiche';
-  document.getElementById('reset').hidden = !(st.q.trim() || st.secteur || st.ville || st.statut !== 'tous');
+  document.getElementById('reset').hidden = !(st.q.trim() || st.secteur || st.statut !== 'tous');
 }
 
 /* Fiche */
@@ -373,7 +371,7 @@ document.addEventListener('click', e => {
   else if (b.dataset.ftype !== undefined) { st.ftype = b.dataset.ftype; rounds(); }
   else if (b.id === 'freset') { st.ftype = ''; rounds(); }
   else if (b.id === 'reset') {
-    Object.assign(st, { q: '', secteur: '', ville: '', statut: 'tous' });
+    Object.assign(st, { q: '', secteur: '', statut: 'tous' });
     syncControls(); list(); document.getElementById('q').focus();
   }
 });
