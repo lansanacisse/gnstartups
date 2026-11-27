@@ -1,0 +1,36 @@
+id,type,titre,url,editeur,date_publication,date_collecte,archive_url,demo
+src-sabou-pay-verif,entretien,Entretien avec la fondatrice,,Sabou Pay,,2026-11-12,,true
+src-fonio-lab-verif,incubateur,Compte rendu de visite de Fria Hub,https://example.org/demo/src-fonio-lab-verif,,,2026-10-28,,true
+src-tinkisso-sante-verif,entretien,Entretien avec la fondatrice,,Tinkisso Santé,,2026-10-30,,true
+src-wakili-logistique-verif,site_officiel,Contrôle du site officiel (hors ligne),https://example.org/demo/src-wakili-logistique-verif,Wakili Logistique,,2026-10-05,,true
+src-kalan-edu-verif,communique,Attestation de partenariat de deux lycées,https://example.org/demo/src-kalan-edu-verif,,,2026-09-22,,true
+src-djoliba-energie-verif,site_officiel,Rapport d’activité 2025,https://example.org/demo/src-djoliba-energie-verif,Djoliba Énergie,,2026-08-02,,true
+src-bauxi-data-detection,reseau_professionnel,Page entreprise repérée sur un réseau professionnel,https://example.org/demo/src-bauxi-data-detection,,,2026-09-18,,true
+src-mafe-market-verif,reseau_professionnel,Déclaration publique du fondateur,https://example.org/demo/src-mafe-market-verif,,,2025-09-14,,true
+src-nimba-agri-verif,entretien,Entretien avec le fondateur,,Nimba Agri,,2026-07-15,,true
+src-kaloum-immo-verif,incubateur,Signalement de Fria Hub,https://example.org/demo/src-kaloum-immo-verif,,,2026-11-20,,true
+src-fouta-mobility-verif,entretien,Entretien avec le fondateur,,Fouta Mobility,,2026-06-30,,true
+src-sanou-assur-verif,communique,Communiqué de l’assureur partenaire,https://example.org/demo/src-sanou-assur-verif,,,2026-10-10,,true
+src-sabou-pay-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-sabou-pay-equipe,,,2026-09-01,,true
+src-fonio-lab-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-fonio-lab-equipe,,,2026-09-01,,true
+src-tinkisso-sante-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-tinkisso-sante-equipe,,,2026-09-01,,true
+src-wakili-logistique-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-wakili-logistique-equipe,,,2026-09-01,,true
+src-kalan-edu-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-kalan-edu-equipe,,,2026-09-01,,true
+src-djoliba-energie-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-djoliba-energie-equipe,,,2026-09-01,,true
+src-mafe-market-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-mafe-market-equipe,,,2026-09-01,,true
+src-nimba-agri-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-nimba-agri-equipe,,,2026-09-01,,true
+src-fouta-mobility-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-fouta-mobility-equipe,,,2026-09-01,,true
+src-sanou-assur-equipe,site_officiel,Page équipe du site officiel,https://example.org/demo/src-sanou-assur-equipe,,,2026-09-01,,true
+src-fin-1,communique,Communiqué de la startup,https://example.org/demo/src-fin-1,,2023-03-10,2023-03-10,,true
+src-fin-2,communique,Annonce de l’investisseur,https://example.org/demo/src-fin-2,,2025-06-18,2025-06-18,,true
+src-fin-3,communique,Liste des lauréats,https://example.org/demo/src-fin-3,,2022-09-05,2022-09-05,,true
+src-fin-4,communique,Communiqué de presse,https://example.org/demo/src-fin-4,,2024-11-20,2024-11-20,,true
+src-fin-5,presse,Article de presse,https://example.org/demo/src-fin-5,,2021-05-12,2021-05-12,,true
+src-fin-6,communique,Palmarès officiel,https://example.org/demo/src-fin-6,,2023-01-30,2023-01-30,,true
+src-fin-7,communique,Communiqué,https://example.org/demo/src-fin-7,,2022-04-14,2022-04-14,,true
+src-fin-8,communique,Annonce conjointe,https://example.org/demo/src-fin-8,,2026-02-09,2026-02-09,,true
+src-fin-9,entretien,Entretien fondateur,,,,2019-07-03,,true
+src-fin-10,communique,Liste des lauréats,https://example.org/demo/src-fin-10,,2025-03-21,2025-03-21,,true
+src-fin-11,communique,Communiqué de presse,https://example.org/demo/src-fin-11,,2024-06-11,2024-06-11,,true
+src-tinkisso-levee,communique,Annonce d’ouverture du tour seed,https://example.org/demo/src-tinkisso-levee,,2026-10-30,2026-10-30,,true
+src-fonio-levee,entretien,Entretien avec le fondateur sur le tour pré-seed,,,,2026-10-28,,true

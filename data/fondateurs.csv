@@ -1,0 +1,15 @@
+id,startup_id,nom,role,linkedin_url,source_ids,demo
+fond-sabou-pay-1,sabou-pay,Aïssatou Barry,Cofondatrice et CEO,,src-sabou-pay-equipe,true
+fond-sabou-pay-2,sabou-pay,Ousmane Camara,Cofondateur et CTO,,src-sabou-pay-equipe,true
+fond-fonio-lab-1,fonio-lab,Mamadou Diallo,Fondateur et CEO,,src-fonio-lab-equipe,true
+fond-tinkisso-sante-1,tinkisso-sante,Fatoumata Keïta,Fondatrice et CEO,,src-tinkisso-sante-equipe,true
+fond-tinkisso-sante-2,tinkisso-sante,Lansana Kourouma,"Cofondateur, directeur médical",,src-tinkisso-sante-equipe,true
+fond-wakili-logistique-1,wakili-logistique,Ibrahima Sow,Fondateur et CEO,,src-wakili-logistique-equipe,true
+fond-kalan-edu-1,kalan-edu,Kadiatou Condé,Fondatrice et CEO,,src-kalan-edu-equipe,true
+fond-djoliba-energie-1,djoliba-energie,Sékou Traoré,Cofondateur et CEO,,src-djoliba-energie-equipe,true
+fond-djoliba-energie-2,djoliba-energie,Hawa Bangoura,Cofondatrice et COO,,src-djoliba-energie-equipe,true
+fond-mafe-market-1,mafe-market,Alpha Bah,Fondateur et CEO,,src-mafe-market-equipe,true
+fond-nimba-agri-1,nimba-agri,Moussa Guilavogui,Fondateur et CEO,,src-nimba-agri-equipe,true
+fond-fouta-mobility-1,fouta-mobility,Thierno Baldé,Cofondateur et CEO,,src-fouta-mobility-equipe,true
+fond-fouta-mobility-2,fouta-mobility,Mariam Sylla,Cofondatrice et CTO,,src-fouta-mobility-equipe,true
+fond-sanou-assur-1,sanou-assur,Mariama Soumah,Fondatrice et CEO,,src-sanou-assur-equipe,true

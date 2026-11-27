@@ -1,0 +1,49 @@
+name: Proposer une startup
+description: Signaler une startup guinéenne absente du registre.
+title: "Nouvelle startup : "
+labels: ["contribution", "nouvelle-startup"]
+body:
+  - type: markdown
+    attributes:
+      value: Merci ! Chaque proposition est vérifiée selon notre protocole avant publication. Ne partagez que des informations professionnelles publiques.
+  - type: input
+    id: nom
+    attributes:
+      label: Nom de la startup
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Que fait-elle ?
+      description: En une ou deux phrases factuelles.
+    validations:
+      required: true
+  - type: input
+    id: ville
+    attributes:
+      label: Ville principale d'activité
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Site web ou page officielle
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources
+      description: Liens qui montrent que l'entreprise existe et est active (site, article, page d'incubateur...).
+    validations:
+      required: true
+  - type: dropdown
+    id: lien
+    attributes:
+      label: Votre lien avec cette startup
+      options:
+        - Aucun
+        - Fondateur ou salarié
+        - Incubateur, investisseur ou partenaire
+        - Autre
+    validations:
+      required: true

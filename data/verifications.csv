@@ -1,0 +1,12 @@
+id,startup_id,date,methode,statut_constate,resume,verifie_par,source_ids,demo
+ver-sabou-pay-1,sabou-pay,2026-11-12,entretien,active,"Entretien avec la fondatrice ; application active, mise à jour en novembre 2026.",SG,src-sabou-pay-verif,true
+ver-fonio-lab-1,fonio-lab,2026-10-28,visite,active,Visite terrain d’un incubateur partenaire.,SG,src-fonio-lab-verif,true
+ver-tinkisso-sante-1,tinkisso-sante,2026-10-30,entretien,active,Entretien avec la fondatrice et annonce publique de levée.,SG,src-tinkisso-sante-verif,true
+ver-wakili-logistique-1,wakili-logistique,2026-10-05,verification_en_ligne,interrompue,"Site hors ligne depuis mars 2026, ligne coupée, 2 tentatives de contact sans réponse.",SG,src-wakili-logistique-verif,true
+ver-kalan-edu-1,kalan-edu,2026-09-22,tiers,active,Partenariat confirmé par deux lycées.,SG,src-kalan-edu-verif,true
+ver-djoliba-energie-1,djoliba-energie,2026-08-02,verification_en_ligne,active,Rapport d’activité annuel publié.,SG,src-djoliba-energie-verif,true
+ver-mafe-market-1,mafe-market,2025-09-14,verification_en_ligne,fermee,Fermeture annoncée publiquement par le fondateur.,SG,src-mafe-market-verif,true
+ver-nimba-agri-1,nimba-agri,2026-07-15,entretien,active,Entretien avec le fondateur et données d’usage partagées.,SG,src-nimba-agri-verif,true
+ver-kaloum-immo-1,kaloum-immo,2026-11-20,tiers,inconnue,Signalée par un incubateur partenaire ; activité pas encore confirmée.,SG,src-kaloum-immo-verif,true
+ver-fouta-mobility-1,fouta-mobility,2026-06-30,entretien,active,Application active et entretien avec le fondateur.,SG,src-fouta-mobility-verif,true
+ver-sanou-assur-1,sanou-assur,2026-10-10,tiers,active,Agrément confirmé par l’assureur partenaire et entretien avec la fondatrice.,SG,src-sanou-assur-verif,true

@@ -1,0 +1,21 @@
+name: Validation du référentiel
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Documentation générée à jour
+        run: python scripts/gen_docs.py --check
+      - name: Validation des données
+        run: python scripts/validate.py
+      - name: Construction du site
+        run: python scripts/build.py

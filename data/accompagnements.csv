@@ -1,0 +1,3 @@
+id,startup_id,organisation_id,programme,annee,source_ids,demo
+acc-fonio-lab-fria,fonio-lab,fria-hub,Incubation 2025,2025,src-fonio-lab-verif,true
+acc-kaloum-immo-fria,kaloum-immo,fria-hub,Pré-incubation 2026,2026,src-kaloum-immo-verif,true

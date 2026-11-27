@@ -1,0 +1,14 @@
+id,startup_id,date,type_financement,tour,statut,montant,devise,montant_usd,investisseur_ids,investisseurs_non_identifies,source_ids,notes,demo
+fin-sabou-pay-2023,sabou-pay,2023-03-10,investissement,pre_seed,documente,150000,USD,150000,boulbinet-angels,,src-fin-1,,true
+fin-sabou-pay-2025,sabou-pay,2025-06-18,investissement,seed,documente,1200000,USD,1200000,loos-capital;boulbinet-angels,,src-fin-2,,true
+fin-fonio-lab-2022,fonio-lab,2022-09-05,subvention,non_applicable,documente,80000,USD,80000,programme-agricole-regional,,src-fin-3,,true
+fin-tinkisso-sante-2024,tinkisso-sante,2024-11-20,investissement,seed,documente,300000,USD,300000,fonds-sankaran,,src-fin-4,,true
+fin-wakili-logistique-2021,wakili-logistique,2021-05-12,investissement,seed,documente,500000,USD,500000,loos-capital,,src-fin-5,,true
+fin-kalan-edu-2023,kalan-edu,2023-01-30,prix,non_applicable,documente,50000,USD,50000,concours-innovation,,src-fin-6,,true
+fin-djoliba-energie-2022,djoliba-energie,2022-04-14,investissement,pre_seed,documente,250000,USD,250000,boulbinet-angels,,src-fin-7,,true
+fin-djoliba-energie-2026,djoliba-energie,2026-02-09,investissement,serie_a,documente,2000000,USD,2000000,loos-capital;fonds-sankaran,,src-fin-8,,true
+fin-mafe-market-2019,mafe-market,2019-07-03,investissement,pre_seed,documente,120000,USD,120000,,Business angels non divulgués,src-fin-9,,true
+fin-fouta-mobility-2025,fouta-mobility,2025-03-21,subvention,non_applicable,documente,40000,USD,40000,programme-jeunes-entrepreneurs,,src-fin-10,,true
+fin-sanou-assur-2024,sanou-assur,2024-06-11,investissement,seed,documente,400000,USD,400000,fonds-sankaran,,src-fin-11,,true
+fin-tinkisso-sante-2026,tinkisso-sante,2026-10-30,investissement,seed,en_cours_declare,600000,USD,600000,,,src-tinkisso-levee,"Objectif annoncé, tour non clôturé.",true
+fin-fonio-lab-2026,fonio-lab,2026-10-28,investissement,pre_seed,en_cours_declare,,,,,,src-fonio-levee,Montant non communiqué.,true
