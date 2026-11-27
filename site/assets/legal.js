@@ -20,7 +20,7 @@ function sgLegal(ext) {
   <h2>Hébergeur</h2>
   <p>GitHub, Inc.<br>88 Colin P. Kelly Jr. Street<br>San Francisco, CA 94107<br>États-Unis<br>Téléphone : +1 877 448 4820<br>${ext('https://github.com', 'github.com')}</p>
   <h2>Autres informations</h2>
-  <p>Voir aussi la ${link('confidentialite', 'politique de confidentialité')}, la ${link('cookies', 'gestion des cookies')}, les ${link('cgu', 'conditions générales d’utilisation')}, la ${link('propriete-intellectuelle', 'politique de propriété intellectuelle')} et la ${link('signalements', 'politique de gestion des signalements')}.</p>`
+  <p>Voir aussi la ${link('confidentialite', 'politique de confidentialité')} (cookies compris), les ${link('cgu', 'conditions d’utilisation')} (licence comprise) et la page ${link('contact', 'Contact')} (gestion des signalements).</p>`
     },
 
     confidentialite: {
