@@ -1,4 +1,4 @@
--- Schéma PostgreSQL du référentiel Startup Guinée (cible : Supabase).
+-- Schéma PostgreSQL du référentiel StartupGuineeIQ (cible : Supabase).
 -- Fichier généré par scripts/gen_docs.py depuis schema/tables.json. Ne pas modifier à la main.
 -- Version du schéma : 0.1.0
 

@@ -1,6 +1,6 @@
-# Startup Guinée
+# StartupGuineeIQ
 
-Registre indépendant des startups guinéennes. Chaque fiche indique le statut d'activité, sa preuve et la date de la dernière vérification.
+Intelligence de l'écosystème startup guinéen : un registre indépendant des startups, de leurs financements et de leurs fondateurs. Chaque fiche indique le statut d'activité, sa preuve et la date de la dernière vérification.
 
 Site : https://lansanacisse.github.io/gnstartups/
 

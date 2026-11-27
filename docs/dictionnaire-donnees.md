@@ -4,7 +4,7 @@
 
 Version du schéma : **0.1.0**
 
-Modèle de données du référentiel Startup Guinée. Source unique : la validation (scripts/validate.py), le dictionnaire (docs/dictionnaire-donnees.md) et le schéma PostgreSQL (sql/schema.sql) sont générés à partir de ce fichier.
+Modèle de données du référentiel StartupGuineeIQ. Source unique : la validation (scripts/validate.py), le dictionnaire (docs/dictionnaire-donnees.md) et le schéma PostgreSQL (sql/schema.sql) sont générés à partir de ce fichier.
 
 ## Tables
 

@@ -48,7 +48,7 @@ def gen_doc(schema: dict) -> str:
 
 
 def gen_sql(schema: dict) -> str:
-    L = ["-- Schéma PostgreSQL du référentiel Startup Guinée (cible : Supabase).",
+    L = ["-- Schéma PostgreSQL du référentiel StartupGuineeIQ (cible : Supabase).",
          "-- Fichier généré par scripts/gen_docs.py depuis schema/tables.json. Ne pas modifier à la main.",
          f"-- Version du schéma : {schema['version']}", "", "begin;", ""]
     for name, vals in schema["enums"].items():

@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "description": "Modèle de données du référentiel Startup Guinée. Source unique : la validation (scripts/validate.py), le dictionnaire (docs/dictionnaire-donnees.md) et le schéma PostgreSQL (sql/schema.sql) sont générés à partir de ce fichier.",
+  "description": "Modèle de données du référentiel StartupGuineeIQ. Source unique : la validation (scripts/validate.py), le dictionnaire (docs/dictionnaire-donnees.md) et le schéma PostgreSQL (sql/schema.sql) sont générés à partir de ce fichier.",
   "enums": {
     "categorie": {
       "startup": "Entreprise innovante avec une activité identifiable et une ambition de croissance reproductible.",
