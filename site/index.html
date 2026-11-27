@@ -30,8 +30,28 @@
 <main class="wrap" id="view"><p class="mute" role="status">Chargement du registre…</p></main>
 <noscript><p class="wrap">Ce site a besoin de JavaScript pour afficher le registre. Les données brutes sont disponibles sur <a href="https://github.com/lansanacisse/gnstartups/tree/main/data">GitHub</a>.</p></noscript>
 <footer class="wrap"><div class="foot">
-  <p>Une absence d’information récente ne vaut jamais preuve de fermeture.</p>
-  <p id="meta"></p>
+  <div class="foot-about">
+    <p class="foot-brand">Startup Guinée</p>
+    <p>Registre indépendant des startups guinéennes. Chaque statut s’appuie sur une preuve datée ; une absence d’information récente ne vaut jamais preuve de fermeture.</p>
+  </div>
+  <div>
+    <h2 class="foot-title">Situations</h2>
+    <ul class="legend">
+      <li><span class="status st-active">Active</span><span>activité prouvée il y a moins de 6 mois</span></li>
+      <li><span class="status st-interrompue">Activité interrompue</span><span>plusieurs signaux d’arrêt, sans fermeture déclarée</span></li>
+      <li><span class="status st-fermee">Fermée</span><span>fermeture déclarée par l’entreprise ou un registre</span></li>
+      <li><span class="status st-inconnue">Statut inconnu</span><span>pas assez de preuves pour statuer</span></li>
+    </ul>
+  </div>
+  <div>
+    <h2 class="foot-title">Le registre</h2>
+    <ul class="foot-links">
+      <li><a href="#methodologie">Méthodologie</a></li>
+      <li><a id="foot-propose" href="https://github.com/lansanacisse/gnstartups/issues/new/choose" target="_blank" rel="noopener noreferrer">Proposer une startup<span class="sr"> (nouvel onglet)</span></a></li>
+      <li><a href="https://github.com/lansanacisse/gnstartups" target="_blank" rel="noopener noreferrer">Données et code source<span class="sr"> (nouvel onglet)</span></a></li>
+    </ul>
+  </div>
+  <p class="foot-meta" id="meta"></p>
 </div></footer>
 <script src="assets/app.js"></script>
 </body>
