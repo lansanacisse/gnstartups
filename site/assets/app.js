@@ -297,7 +297,7 @@ function accueil() {
    <p class="lead">StartupGuineeIQ recense les startups créées en Guinée ou actives sur le marché guinéen. Chaque fiche indique si l’entreprise est active, sur quelle preuve, et à quelle date elle a été vérifiée.</p>
    <form class="home-search" role="search" id="home-search"><label class="field">${searchIco}<span class="sr">Rechercher une startup</span><input id="hq" type="search" placeholder="Nom, activité, fondateur" autocomplete="off"></label><button class="btn primary" type="submit">Explorer</button></form>
   </header>
-  <p class="summary"><b>${I.fiches_publiees} fiche${I.fiches_publiees > 1 ? 's' : ''} publiée${I.fiches_publiees > 1 ? 's' : ''}</b>, dont ${I.par_statut_activite.active} actives. <b>${usd(tot)}</b> de financements documentés sur ${pl(done.length, 'opération')}. ${I.en_levee} startup${I.en_levee > 1 ? 's' : ''} en levée.</p>
+  <p class="summary"><b>${I.par_statut_activite.active} startup${I.par_statut_activite.active > 1 ? 's' : ''} active${I.par_statut_activite.active > 1 ? 's' : ''}</b>. <b>${usd(tot)}</b> de financements documentés sur ${pl(done.length, 'opération')}. ${I.en_levee} startup${I.en_levee > 1 ? 's' : ''} en levée.</p>
   <div class="cols">
    <section class="stack"><div class="section-head"><h2>Dernières évolutions</h2><a href="#evolutions">Toutes les évolutions</a></div>
     <ol class="tl">${D.evenements.slice(0, 4).map(e => `<li><p class="when">${fdate(e.date)}</p><p class="flags">${flag(lab('champ', e.champ), e.champ === 'statut_activite' ? (STATUS_FLAG[e.nouvelle_valeur] || 'fl-neu') : (EVENT_FLAG[e.champ] || 'fl-neu'))}<a href="#fiche-${esc(e.startup_id)}"><b>${esc(e.startup)}</b></a></p><p>${esc(e.motif)}</p></li>`).join('')}</ol></section>
@@ -337,12 +337,17 @@ function apropos() {
 
 /* Contact */
 function contact() {
-  const mail = typeof SG_CONTACT === 'string' ? `<a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a>` : '';
+  const hasMail = typeof SG_CONTACT === 'string' && SG_CONTACT;
+  const write = hasMail
+    ? `<p><a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a></p>
+  <p>Pour une question sur le registre, une demande presse ou partenariat, l’exercice de vos droits sur vos données personnelles, ou un signalement confidentiel. Nous répondons en général sous 7 jours.</p>`
+    : `<p>L’adresse de contact du projet est en cours de création. En attendant :</p>
+  <ul><li>pour une question, une demande presse ou partenariat, ${ext(`https://github.com/${REPO}/issues/new/choose`, 'ouvrez une demande sur GitHub')} ;</li>
+  <li>pour une demande confidentielle (données personnelles, contenu illicite), ouvrez une demande en écrivant seulement « Demande confidentielle », sans aucun détail : nous vous indiquerons comment nous la transmettre en privé.</li></ul>`;
   view.innerHTML = `<article class="prose">
   <h1 tabindex="-1">Contact</h1>
   <h2>Écrire à l’équipe</h2>
-  <p>${mail}</p>
-  <p>Pour une question sur le registre, une demande presse ou partenariat, l’exercice de vos droits sur vos données personnelles, ou un signalement confidentiel. Nous répondons en général sous 7 jours.</p>
+  ${write}
   <h2>Corriger ou compléter le registre</h2>
   <p>Ces demandes passent par des formulaires publics sur GitHub, pour garder une trace de chaque modification :</p>
   <ul><li>${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup')}</li>
@@ -401,7 +406,7 @@ matchMedia('(min-width: 601px)').addEventListener('change', e => { if (e.matches
 fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('erreur ' + r.status); return r.json(); }).then(data => {
   D = data;
   document.getElementById('demo').hidden = !D.contient_demo;
-  document.getElementById('meta').textContent = `${D.startups.length} fiches publiées. Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}.`;
+  document.getElementById('meta').textContent = `Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}.`;
   const fp = document.getElementById('foot-propose'); if (fp) fp.href = ISSUE('nouvelle-startup.yml', 'Nouvelle startup : ');
   route();
 }).catch(err => {

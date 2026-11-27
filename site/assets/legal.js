@@ -1,9 +1,10 @@
 /* Pages légales de StartupGuineeIQ. L'adresse de contact est définie ici, une seule fois. */
-const SG_CONTACT = 'CONTACT_A_RENSEIGNER';
+// Laisser vide tant que l'adresse dédiée n'existe pas : les pages affichent alors une formulation générique.
+const SG_CONTACT = '';
 const SG_LEGAL_UPDATED = '27 novembre 2026';
 
 function sgLegal(ext) {
-  const mail = `<a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a>`;
+  const mail = SG_CONTACT ? `<a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a>` : 'l’adresse de contact du projet (en cours de création, voir la page <a href="#contact">Contact</a>)';
   const link = (hash, text) => `<a href="#${hash}">${text}</a>`;
   return {
     'mentions-legales': {
