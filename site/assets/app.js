@@ -63,29 +63,53 @@ function repertoire() {
   const opt = (arr, v, all) => `<option value="">${all}</option>` + arr.map(x => `<option value="${esc(x.id)}"${x.id === v ? ' selected' : ''}>${esc(x.libelle || x.nom)}</option>`).join('');
   const usedS = D.secteurs.filter(x => S.some(s => s.secteur_id === x.id));
   const usedV = D.villes.filter(x => S.some(s => s.ville_id === x.id));
+  const n = k => S.filter(s => matchStatut(s, k)).length;
   view.innerHTML = `<div class="stack">
   <div class="page-head"><div><h1 tabindex="-1">Répertoire des startups guinéennes</h1>
    <p class="intro">Chaque fiche indique le statut d’activité, la preuve qui le justifie et la date de la dernière vérification.</p></div>
    <span class="wide">${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</span></div>
   <div class="filters" role="search">
-   <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Nom, activité, fondateur" value="${esc(st.q)}" autocomplete="off"></label>
-   <label class="field"><span class="label">Secteur</span><select id="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
-   <label class="field"><span class="label">Ville</span><select id="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</label>
+   <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Rechercher" value="${esc(st.q)}" autocomplete="off"></label>
+   <label class="field wide-flex"><span class="label">Secteur</span><select id="secteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
+   <label class="field wide-flex"><span class="label">Ville</span><select id="ville" data-k="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</label>
+   <button type="button" id="open-filters" class="filter-btn narrow-flex" aria-haspopup="dialog" aria-controls="fsheet"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtres<span class="n" id="fcount"></span></button>
   </div>
-  <div class="toolbar"><div class="seg" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${S.filter(s => matchStatut(s, x[0])).length}</span></button>`).join('')}</div>
+  <div class="toolbar"><div class="seg wide-flex" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${n(x[0])}</span></button>`).join('')}</div>
    <div class="result"><span id="rc" aria-live="polite"></span><button type="button" id="reset" class="linkbtn">Réinitialiser les filtres</button></div></div>
   <ul class="entries" id="list"></ul><p class="empty" id="empty" hidden>Aucune startup ne correspond à ces filtres.</p>
-  <p class="narrow propose">Une startup manque ? ${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</p></div>`;
-  list();
+  <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
+   <div class="sheet-head"><h2 id="fs-title">Filtrer les startups</h2><button type="button" class="linkbtn" data-close-sheet>Fermer</button></div>
+   <fieldset class="opts"><legend>Situation</legend>
+    ${STATUTS.map(x => `<label class="opt"><input type="radio" name="mstatut" value="${x[0]}"${st.statut === x[0] ? ' checked' : ''}><span>${x[1]}</span><span class="count">${n(x[0])}</span></label>`).join('')}
+   </fieldset>
+   <label class="sheet-field"><span>Secteur</span><span class="field"><select id="msecteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</span></label>
+   <label class="sheet-field"><span>Ville</span><span class="field"><select id="mville" data-k="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</span></label>
+   <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
+  </dialog></div>`;
+  const sheet = document.getElementById('fsheet');
   document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; list(); });
-  document.getElementById('secteur').addEventListener('change', e => { st.secteur = e.target.value; list(); });
-  document.getElementById('ville').addEventListener('change', e => { st.ville = e.target.value; list(); });
+  view.querySelectorAll('select[data-k]').forEach(sel => sel.addEventListener('change', e => { st[e.target.dataset.k] = e.target.value; syncControls(); list(); }));
+  view.querySelectorAll('input[name=mstatut]').forEach(r => r.addEventListener('change', e => { st.statut = e.target.value; list(); }));
+  document.getElementById('open-filters').addEventListener('click', () => sheet.showModal());
+  document.getElementById('mreset').addEventListener('click', () => { Object.assign(st, { secteur: '', ville: '', statut: 'tous' }); syncControls(); list(); });
+  sheet.addEventListener('click', e => { if (e.target === sheet || e.target.closest('[data-close-sheet]')) sheet.close(); });
+  sheet.addEventListener('close', () => document.getElementById('open-filters').focus());
+  list();
+}
+/* Les filtres existent en deux présentations (barre sur ordinateur, panneau sur téléphone) : on garde les deux en phase */
+function syncControls() {
+  view.querySelectorAll('select[data-k]').forEach(sel => { sel.value = st[sel.dataset.k]; });
+  const q = document.getElementById('q'); if (q && q.value !== st.q) q.value = st.q;
 }
 function list() {
   const q = st.q.trim().toLowerCase();
   const f = D.startups.filter(s => (!st.secteur || s.secteur_id === st.secteur) && (!st.ville || s.ville_id === st.ville) && matchStatut(s, st.statut) &&
     (!q || [s.nom, s.description, ...s.fondateurs.map(x => x.nom)].join(' ').toLowerCase().includes(q)));
   document.querySelectorAll('[data-statut]').forEach(b => { const on = b.dataset.statut === st.statut; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  document.querySelectorAll('input[name=mstatut]').forEach(r => { r.checked = r.value === st.statut; });
+  const active = (st.statut !== 'tous') + !!st.secteur + !!st.ville;
+  const fc = document.getElementById('fcount'); if (fc) fc.textContent = active ? String(active) : '';
+  const ob = document.getElementById('open-filters'); if (ob) ob.setAttribute('aria-label', active ? `Filtres, ${active} actif${active > 1 ? 's' : ''}` : 'Filtres');
   document.getElementById('list').innerHTML = f.map(s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
    <div class="entry-head"><h2>${esc(s.nom)}</h2>${status(s.statut_activite)}</div>
    <p class="entry-meta">${esc(s.secteur)} · ${esc(s.ville)}${s.annee_creation ? ' · ' + s.annee_creation : ''}</p>
@@ -93,6 +117,7 @@ function list() {
    <p class="entry-foot"><span>Financement : <b>${finLabel(s)}</b></span><span>${s.date_derniere_verification ? 'Vérifiée le ' + fdate(s.date_derniere_verification) : 'Pas encore vérifiée'}</span></p></a></li>`).join('');
   document.getElementById('empty').hidden = f.length > 0;
   document.getElementById('rc').textContent = f.length + ' fiche' + (f.length > 1 ? 's' : '') + ' sur ' + D.startups.length;
+  const ms = document.getElementById('mshow'); if (ms) ms.textContent = f.length ? `Voir ${f.length} fiche${f.length > 1 ? 's' : ''}` : 'Aucune fiche';
   document.getElementById('reset').hidden = !(st.q.trim() || st.secteur || st.ville || st.statut !== 'tous');
 }
 
@@ -253,8 +278,7 @@ document.addEventListener('click', e => {
   else if (b.dataset.ftype !== undefined) { st.ftype = b.dataset.ftype; rounds(); }
   else if (b.id === 'reset') {
     Object.assign(st, { q: '', secteur: '', ville: '', statut: 'tous' });
-    ['q', 'secteur', 'ville'].forEach(id => { document.getElementById(id).value = ''; });
-    list(); document.getElementById('q').focus();
+    syncControls(); list(); document.getElementById('q').focus();
   }
 });
 window.addEventListener('hashchange', route);
@@ -262,7 +286,8 @@ window.addEventListener('hashchange', route);
 fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('erreur ' + r.status); return r.json(); }).then(data => {
   D = data;
   document.getElementById('demo').hidden = !D.contient_demo;
-  document.getElementById('meta').textContent = `Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}`;
+  document.getElementById('meta').textContent = `Données mises à jour le ${fdate(D.genere_le.slice(0, 10))} · ${D.startups.length} fiches publiées`;
+  document.getElementById('foot-propose').href = ISSUE('nouvelle-startup.yml', 'Nouvelle startup : ');
   route();
 }).catch(err => {
   view.innerHTML = `<div class="stack"><h1>Le registre n’a pas pu être chargé</h1><p>${esc(err.message)}. Réessayez dans quelques instants. En local, lancez <code>python -m http.server -d site</code> après <code>python scripts/build.py</code>.</p></div>`;
