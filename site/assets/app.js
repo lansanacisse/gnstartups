@@ -66,15 +66,16 @@ function repertoire() {
   view.innerHTML = `<div class="stack">
   <div class="page-head"><div><h1 tabindex="-1">Répertoire des startups guinéennes</h1>
    <p class="intro">Chaque fiche indique le statut d’activité, la preuve qui le justifie et la date de la dernière vérification.</p></div>
-   ${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</div>
+   <span class="wide">${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</span></div>
   <div class="filters" role="search">
    <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Nom, activité, fondateur" value="${esc(st.q)}" autocomplete="off"></label>
-   <label class="field"><span class="label">Secteur</span><select id="secteur">${opt(usedS, st.secteur, 'Tous')}</select>${chev}</label>
-   <label class="field"><span class="label">Ville</span><select id="ville">${opt(usedV, st.ville, 'Toutes')}</select>${chev}</label>
+   <label class="field"><span class="label">Secteur</span><select id="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
+   <label class="field"><span class="label">Ville</span><select id="ville">${opt(usedV, st.ville, 'Toutes les villes')}</select>${chev}</label>
   </div>
   <div class="toolbar"><div class="seg" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${S.filter(s => matchStatut(s, x[0])).length}</span></button>`).join('')}</div>
    <div class="result"><span id="rc" aria-live="polite"></span><button type="button" id="reset" class="linkbtn">Réinitialiser les filtres</button></div></div>
-  <ul class="entries" id="list"></ul><p class="empty" id="empty" hidden>Aucune startup ne correspond à ces filtres.</p></div>`;
+  <ul class="entries" id="list"></ul><p class="empty" id="empty" hidden>Aucune startup ne correspond à ces filtres.</p>
+  <p class="narrow propose">Une startup manque ? ${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</p></div>`;
   list();
   document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; list(); });
   document.getElementById('secteur').addEventListener('change', e => { st.secteur = e.target.value; list(); });
