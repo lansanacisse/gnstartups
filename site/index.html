@@ -3,30 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Startup Guinée, le registre des startups guinéennes</title>
-<meta name="description" content="Registre indépendant, structuré et vérifié des startups guinéennes : statut d’activité, financements, sources et date de vérification.">
+<title>Startup Guinée, registre des startups guinéennes</title>
+<meta name="description" content="Registre indépendant des startups guinéennes : statut d’activité, financements, sources et date de dernière vérification pour chaque entreprise.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0a0a'/%3E%3Ctext x='16' y='21.5' font-family='Arial,sans-serif' font-size='14' font-weight='700' fill='%23fff' text-anchor='middle'%3ESG%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<div id="demo" class="demo" hidden>Version de démonstration : les startups, financements et sources affichés sont fictifs. Le référentiel réel est en cours de constitution.</div>
-<header><div class="wrap">
+<p id="demo" class="demo" hidden>Version de démonstration : les startups, financements et sources affichés sont fictifs. Le référentiel réel est en cours de constitution.</p>
+<header class="wrap top">
   <a class="brand" href="#repertoire"><b>Startup Guinée</b><span>Registre des startups</span></a>
-  <nav class="seg" id="nav" aria-label="Sections">
-    <a href="#repertoire" data-v="repertoire">Répertoire</a>
-    <a href="#financements" data-v="financements">Financements</a>
-    <a href="#indicateurs" data-v="indicateurs">Indicateurs</a>
-    <a href="#evolutions" data-v="evolutions">Évolutions</a>
-    <a href="#methodologie" data-v="methodologie">Méthodologie</a>
+  <nav aria-label="Sections">
+    <div class="seg" id="nav">
+      <a href="#repertoire" data-v="repertoire">Répertoire</a>
+      <a href="#financements" data-v="financements">Financements</a>
+      <a href="#indicateurs" data-v="indicateurs">Indicateurs</a>
+      <a href="#evolutions" data-v="evolutions">Évolutions</a>
+      <a href="#methodologie" data-v="methodologie">Méthodologie</a>
+    </div>
   </nav>
-</div></header>
-<main class="wrap" id="view" tabindex="-1"><p class="mute">Chargement du registre…</p></main>
-<div class="wrap"><footer>
-  <div>Statut = preuve + date. Une absence d’information récente ne vaut jamais preuve de fermeture.</div>
-  <div id="meta"></div>
-</footer></div>
+</header>
+<main class="wrap" id="view"><p class="mute" role="status">Chargement du registre…</p></main>
+<noscript><p class="wrap">Ce site a besoin de JavaScript pour afficher le registre. Les données brutes sont disponibles sur <a href="https://github.com/lansanacisse/gnstartups/tree/main/data">GitHub</a>.</p></noscript>
+<footer class="wrap"><div class="foot">
+  <p>Une absence d’information récente ne vaut jamais preuve de fermeture.</p>
+  <p id="meta"></p>
+</div></footer>
 <script src="assets/app.js"></script>
 </body>
 </html>
