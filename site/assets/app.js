@@ -98,15 +98,12 @@ function repertoire() {
   <ul class="entries" id="list"></ul><p class="empty" id="empty" hidden>Aucune startup ne correspond à ces filtres.</p>
   <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
    <div class="sheet-head"><h2 id="fs-title">Filtrer les startups</h2><button type="button" class="linkbtn" data-close-sheet>Fermer</button></div>
-   <fieldset class="opts"><legend>Situation</legend>
-    ${STATUTS.map(x => `<label class="opt"><input type="radio" name="mstatut" value="${x[0]}"${st.statut === x[0] ? ' checked' : ''}><span>${x[1]}</span><span class="count">${n(x[0])}</span></label>`).join('')}
-   </fieldset>
+   <label class="sheet-field"><span>Situation</span><span class="field"><select id="mstatut" data-k="statut">${STATUTS.map(x => `<option value="${x[0]}"${st.statut === x[0] ? ' selected' : ''}>${x[1]} (${n(x[0])})</option>`).join('')}</select>${chev}</span></label>
    <label class="sheet-field"><span>Secteur</span><span class="field"><select id="msecteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</span></label>
    <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
   </dialog></div>`;
   document.getElementById('q').addEventListener('input', e => { st.q = e.target.value; list(); });
   view.querySelectorAll('select[data-k]').forEach(sel => sel.addEventListener('change', e => { st[e.target.dataset.k] = e.target.value; syncControls(); list(); }));
-  view.querySelectorAll('input[name=mstatut]').forEach(r => r.addEventListener('change', e => { st.statut = e.target.value; list(); }));
   document.getElementById('mreset').addEventListener('click', () => { Object.assign(st, { secteur: '', statut: 'tous' }); syncControls(); list(); });
   bindSheet();
   list();
@@ -121,7 +118,7 @@ function list() {
   const f = D.startups.filter(s => (!st.secteur || s.secteur_id === st.secteur) && matchStatut(s, st.statut) &&
     (!q || [s.nom, s.description, ...s.fondateurs.map(x => x.nom)].join(' ').toLowerCase().includes(q)));
   document.querySelectorAll('[data-statut]').forEach(b => { const on = b.dataset.statut === st.statut; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-  document.querySelectorAll('input[name=mstatut]').forEach(r => { r.checked = r.value === st.statut; });
+  const mst = document.getElementById('mstatut'); if (mst) mst.value = st.statut;
   setFilterCount((st.statut !== 'tous') + !!st.secteur);
   document.getElementById('list').innerHTML = f.map(entryCard).join('');
   document.getElementById('empty').hidden = f.length > 0;
