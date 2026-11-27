@@ -67,6 +67,13 @@ function setFilterCount(active) {
   const ob = document.getElementById('open-filters'); if (ob) ob.setAttribute('aria-label', active ? `Filtres, ${active} actif${active > 1 ? 's' : ''}` : 'Filtres');
 }
 
+/* Carte d'une startup (répertoire, accueil) */
+const entryCard = s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
+   <div class="entry-head"><h2>${esc(s.nom)}</h2>${status(s.statut_activite)}</div>
+   <p class="entry-meta">${esc(s.secteur)}, ${esc(s.ville)}${s.annee_creation ? ', créée en ' + s.annee_creation : ''}</p>
+   <p class="entry-desc">${esc(s.description)}</p>${flags(s)}
+   <p class="entry-foot"><span>Financement : <b>${finLabel(s)}</b></span><span>${s.date_derniere_verification ? 'Vérifiée le ' + fdate(s.date_derniere_verification) : 'Pas encore vérifiée'}</span></p></a></li>`;
+
 /* Répertoire */
 const STATUTS = [['tous', 'Toutes'], ['active', 'Actives'], ['levee', 'En levée'], ['interrompue', 'Interrompues'], ['fermee', 'Fermées'], ['a_verifier', 'À vérifier']];
 const matchStatut = (s, k) => k === 'tous' || (k === 'levee' ? s.statut_financement === 'en_cours_declare' : k === 'a_verifier' ? s.statut_verification !== 'verifiee' : s.statut_activite === k);
@@ -118,11 +125,7 @@ function list() {
   document.querySelectorAll('[data-statut]').forEach(b => { const on = b.dataset.statut === st.statut; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
   document.querySelectorAll('input[name=mstatut]').forEach(r => { r.checked = r.value === st.statut; });
   setFilterCount((st.statut !== 'tous') + !!st.secteur + !!st.ville);
-  document.getElementById('list').innerHTML = f.map(s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
-   <div class="entry-head"><h2>${esc(s.nom)}</h2>${status(s.statut_activite)}</div>
-   <p class="entry-meta">${esc(s.secteur)}, ${esc(s.ville)}${s.annee_creation ? ', créée en ' + s.annee_creation : ''}</p>
-   <p class="entry-desc">${esc(s.description)}</p>${flags(s)}
-   <p class="entry-foot"><span>Financement : <b>${finLabel(s)}</b></span><span>${s.date_derniere_verification ? 'Vérifiée le ' + fdate(s.date_derniere_verification) : 'Pas encore vérifiée'}</span></p></a></li>`).join('');
+  document.getElementById('list').innerHTML = f.map(entryCard).join('');
   document.getElementById('empty').hidden = f.length > 0;
   document.getElementById('rc').textContent = f.length + ' fiche' + (f.length > 1 ? 's' : '') + ' sur ' + D.startups.length;
   const ms = document.getElementById('mshow'); if (ms) ms.textContent = f.length ? `Voir ${f.length} fiche${f.length > 1 ? 's' : ''}` : 'Aucune fiche';
@@ -132,13 +135,14 @@ function list() {
 /* Fiche */
 function fiche(id) {
   const s = D.startups.find(x => x.id === id);
-  if (!s) { view.innerHTML = `<div class="stack"><h1 tabindex="-1">Fiche introuvable</h1><p>Cette fiche n’existe pas ou n’est pas encore publiée. <a href="#repertoire">Retour au répertoire</a></p></div>`; return; }
+  if (!s) { view.innerHTML = `<div class="stack"><h1 tabindex="-1">Fiche introuvable</h1><p>Cette fiche n’existe pas ou n’est pas encore publiée. <a href="#explorer">Retour au répertoire</a></p></div>`; return; }
   const last = s.verifications[0];
   const meta = [s.secteur, s.ville === s.region ? s.ville : `${s.ville} (région de ${s.region})`, s.annee_creation && 'créée en ' + s.annee_creation].filter(Boolean).map(esc).join(', ');
   const facts = [['Raison sociale', s.raison_sociale], ['Forme juridique', s.forme_juridique], ['Pays d’immatriculation', s.pays_immatriculation], ['RCCM', s.rccm],
     ['Date d’immatriculation', fdate(s.date_creation_juridique)], ['Effectif', s.effectif], ['Catégorie', lab('categorie', s.categorie)]];
   const known = facts.filter(f => f[1]), missing = facts.filter(f => !f[1]).map(f => f[0] === 'RCCM' ? f[0] : f[0].toLowerCase());
-  const links = [s.site_web && ext(s.site_web, 'Site officiel'), s.linkedin_url && ext(s.linkedin_url, 'Page LinkedIn')].filter(Boolean);
+  const links = [s.site_web && ext(s.site_web, 'Site officiel'), s.linkedin_url && ext(s.linkedin_url, 'LinkedIn'), s.x_url && ext(s.x_url, 'X'), s.facebook_url && ext(s.facebook_url, 'Facebook'), s.instagram_url && ext(s.instagram_url, 'Instagram')].filter(Boolean);
+  if (!links.length) missing.unshift('site web et réseaux sociaux');
   // Un événement « vérification » le même jour qu'une ligne de vérification fait doublon : on garde la vérification
   const vDates = new Set(s.verifications.map(v => v.date));
   const hist = [...s.verifications.map(v => ({ date: v.date, html: `<p><b>Vérification par ${esc(lab('methode_verification', v.methode))}</b></p><p>${esc(v.resume)}</p><p class="small mute">Statut constaté : ${esc(lab('statut_activite', v.statut_constate))}</p>${srcLine(v.sources)}` })),
@@ -146,7 +150,7 @@ function fiche(id) {
     .sort((a, b) => a.date < b.date ? 1 : -1);
   const body = `Fiche : ${s.nom} (${location.origin}${location.pathname}#fiche-${s.id})\n\nInformation à corriger :\n\nValeur correcte :\n\nSource (lien ou explication) :\n`;
   view.innerHTML = `<div class="stack">
-  <nav class="crumbs" aria-label="Fil d’Ariane"><a href="#repertoire">Répertoire</a><span aria-hidden="true">/</span><span aria-current="page">${esc(s.nom)}</span></nav>
+  <nav class="crumbs" aria-label="Fil d’Ariane"><a href="#explorer">Explorer</a><span aria-hidden="true">/</span><span aria-current="page">${esc(s.nom)}</span></nav>
   <header class="fiche-head"><h1 tabindex="-1">${esc(s.nom)}</h1><p class="mute">${meta}</p><p class="lead">${esc(s.description)}</p>
    ${links.length ? `<p class="links">${links.join('')}</p>` : ''}${srcLine(s.sources)}</header>
   <div class="fiche">
@@ -280,19 +284,100 @@ function methodologie() {
   </article>`;
 }
 
-const VIEWS = { repertoire, financements, indicateurs, evolutions, methodologie };
-const TITLES = { repertoire: 'Répertoire', financements: 'Financements', indicateurs: 'Indicateurs', evolutions: 'Évolutions', methodologie: 'Méthodologie' };
+/* Accueil */
+function accueil() {
+  const I = D.indicateurs, S = D.startups;
+  const done = D.financements.filter(r => r.statut === 'documente');
+  const tot = done.reduce((a, r) => a + (r.montant_usd || 0), 0);
+  const pl = (n, w) => `${n} ${w}${n > 1 ? 's' : ''}`;
+  const recent = S.filter(s => s.date_derniere_verification).sort((a, b) => a.date_derniere_verification < b.date_derniere_verification ? 1 : -1).slice(0, 3);
+  const sec = {}; S.forEach(s => { sec[s.secteur_id] = sec[s.secteur_id] || { label: s.secteur, n: 0 }; sec[s.secteur_id].n++; });
+  view.innerHTML = `<div class="stack">
+  <header class="home-head"><h1 tabindex="-1">Les startups guinéennes, vérifiées et sourcées</h1>
+   <p class="lead">StartupGuineeIQ recense les startups créées en Guinée ou actives sur le marché guinéen. Chaque fiche indique si l’entreprise est active, sur quelle preuve, et à quelle date elle a été vérifiée.</p>
+   <form class="home-search" role="search" id="home-search"><label class="field">${searchIco}<span class="sr">Rechercher une startup</span><input id="hq" type="search" placeholder="Nom, activité, fondateur" autocomplete="off"></label><button class="btn primary" type="submit">Explorer</button></form>
+  </header>
+  <p class="summary"><b>${I.par_statut_activite.active} startup${I.par_statut_activite.active > 1 ? 's' : ''} active${I.par_statut_activite.active > 1 ? 's' : ''}</b>. <b>${usd(tot)}</b> de financements documentés sur ${pl(done.length, 'opération')}. ${I.en_levee} startup${I.en_levee > 1 ? 's' : ''} en levée.</p>
+  <div class="cols">
+   <section class="stack"><div class="section-head"><h2>Dernières évolutions</h2><a href="#evolutions">Toutes les évolutions</a></div>
+    <ol class="tl">${D.evenements.slice(0, 4).map(e => `<li><p class="when">${fdate(e.date)}</p><p class="flags">${flag(lab('champ', e.champ), e.champ === 'statut_activite' ? (STATUS_FLAG[e.nouvelle_valeur] || 'fl-neu') : (EVENT_FLAG[e.champ] || 'fl-neu'))}<a href="#fiche-${esc(e.startup_id)}"><b>${esc(e.startup)}</b></a></p><p>${esc(e.motif)}</p></li>`).join('')}</ol></section>
+   <section class="stack"><div class="section-head"><h2>Récemment vérifiées</h2><a href="#explorer">Tout le répertoire</a></div>
+    <ul class="entries compact">${recent.map(s => `<li>${entryCard(s)}</li>`).join('')}</ul></section>
+  </div>
+  <section class="stack"><h2>Par secteur</h2>
+   <ul class="chips">${Object.entries(sec).sort((a, b) => b[1].n - a[1].n).map(([id, x]) => `<li><button type="button" data-home-sector="${esc(id)}">${esc(x.label)}<span class="count">${x.n}</span></button></li>`).join('')}</ul></section>
+  <section class="callout"><div><h2>Une startup manque ?</h2><p>Proposez-la : elle sera vérifiée selon la méthodologie avant d’être publiée.</p></div>${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</section>
+  </div>`;
+  document.getElementById('home-search').addEventListener('submit', e => { e.preventDefault(); Object.assign(st, { q: document.getElementById('hq').value, secteur: '', ville: '', statut: 'tous' }); location.hash = '#explorer'; });
+  view.querySelectorAll('[data-home-sector]').forEach(b => b.addEventListener('click', () => { Object.assign(st, { q: '', secteur: b.dataset.homeSector, ville: '', statut: 'tous' }); location.hash = '#explorer'; }));
+}
+
+/* À propos */
+function apropos() {
+  view.innerHTML = `<article class="prose">
+  <h1 tabindex="-1">À propos</h1>
+  <p>StartupGuineeIQ est un registre indépendant des startups créées en Guinée ou qui développent leur activité sur le marché guinéen. Il rassemble, pour chaque entreprise, son activité, ses fondateurs, ses financements et son statut, avec les sources qui les justifient.</p>
+  <h2>Pourquoi ce registre</h2>
+  <p>Les informations sur les startups guinéennes sont dispersées : articles, réseaux sociaux, listes de concours, pages d’incubateurs. Elles sont rarement datées et presque jamais vérifiées. Une startup qui ne publie plus n’est pas forcément fermée, et une levée annoncée n’est pas toujours réalisée. Le registre distingue ces situations, preuve à l’appui.</p>
+  <h2>Ce que nous faisons</h2>
+  <ul><li>Recenser les startups identifiables, sans prétendre couvrir tout l’écosystème.</li>
+  <li>Vérifier les informations essentielles et dater chaque vérification.</li>
+  <li>Citer la source de chaque information importante.</li>
+  <li>Publier des ${'<a href="#indicateurs">indicateurs</a>'} calculés à partir du registre.</li></ul>
+  <h2>Ce que nous ne faisons pas</h2>
+  <ul><li>Noter ou classer les startups.</li>
+  <li>Donner des conseils d’investissement.</li>
+  <li>Laisser une entreprise payer pour figurer au registre ou modifier sa fiche.</li></ul>
+  <h2>Où en est le projet</h2>
+  <p>Le référentiel est en cours de constitution. Les startups affichées aujourd’hui sont des données de démonstration fictives : elles seront remplacées par des fiches réelles et vérifiées avant le lancement public.</p>
+  <h2>En savoir plus</h2>
+  <p>La façon dont les informations sont collectées et vérifiées est décrite dans la <a href="#methodologie">méthodologie</a>. Pour toute question, consultez la page <a href="#contact">contact</a>.</p>
+  </article>`;
+}
+
+/* Contact */
+function contact() {
+  const hasMail = typeof SG_CONTACT === 'string' && SG_CONTACT;
+  const write = hasMail
+    ? `<p><a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a></p>
+  <p>Pour une question sur le registre, une demande presse ou partenariat, l’exercice de vos droits sur vos données personnelles, ou un signalement confidentiel. Nous répondons en général sous 7 jours.</p>`
+    : `<p>L’adresse de contact du projet est en cours de création. En attendant :</p>
+  <ul><li>pour une question, une demande presse ou partenariat, ${ext(`https://github.com/${REPO}/issues/new/choose`, 'ouvrez une demande sur GitHub')} ;</li>
+  <li>pour une demande confidentielle (données personnelles, contenu illicite), ouvrez une demande en écrivant seulement « Demande confidentielle », sans aucun détail : nous vous indiquerons comment nous la transmettre en privé.</li></ul>`;
+  view.innerHTML = `<article class="prose">
+  <h1 tabindex="-1">Contact</h1>
+  <h2>Écrire à l’équipe</h2>
+  ${write}
+  <h2>Corriger ou compléter le registre</h2>
+  <p>Ces demandes passent par des formulaires publics sur GitHub, pour garder une trace de chaque modification :</p>
+  <ul><li>${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup')}</li>
+  <li>${ext(ISSUE('correction.yml', 'Correction : '), 'Signaler une information incorrecte')}</li>
+  <li>${ext(ISSUE('revendication.yml', 'Revendication de fiche : '), 'Revendiquer la fiche de votre startup')}</li></ul>
+  <p class="small mute">Ces formulaires sont visibles par tous : n’y indiquez aucune information personnelle. Voir la <a href="#signalements">politique de gestion des signalements</a>.</p>
+  </article>`;
+}
+
+const VIEWS = { accueil, explorer: repertoire, financements, indicateurs, evolutions, methodologie, 'a-propos': apropos, contact };
+const TITLES = { accueil: 'Accueil', explorer: 'Explorer les startups', financements: 'Financements', indicateurs: 'Indicateurs', evolutions: 'Évolutions', methodologie: 'Méthodologie', 'a-propos': 'À propos', contact: 'Contact' };
+const ALIASES = { repertoire: 'explorer' };
+/* Pages légales (assets/legal.js) : des pages de texte, qui ne dépendent pas des données du registre */
+const LEGAL = typeof sgLegal === 'function' ? sgLegal(ext) : {};
+Object.entries(LEGAL).forEach(([k, p]) => {
+  TITLES[k] = p.title;
+  VIEWS[k] = () => { view.innerHTML = `<article class="prose legal"><h1 tabindex="-1">${p.title}</h1><p class="small mute">Dernière mise à jour : ${SG_LEGAL_UPDATED}</p>${p.html}</article>`; };
+});
 let first = true;
 function route() {
-  const h = location.hash.slice(1) || 'repertoire';
-  const v = h.startsWith('fiche-') ? 'fiche' : (VIEWS[h] ? h : 'repertoire');
+  const raw = location.hash.slice(1) || 'accueil';
+  const h = ALIASES[raw] || raw;
+  const v = h.startsWith('fiche-') ? 'fiche' : (VIEWS[h] ? h : 'accueil');
   document.querySelectorAll('#nav a, .drawer-nav a').forEach(a => {
-    const on = a.dataset.v === v || (v === 'fiche' && a.dataset.v === 'repertoire');
+    const on = a.dataset.v === v || (v === 'fiche' && a.dataset.v === 'explorer');
     a.classList.toggle('on', on);
     if (a.dataset.v === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
   if (v === 'fiche') { const s = D.startups.find(x => x.id === h.slice(6)); fiche(h.slice(6)); document.title = (s ? s.nom : 'Fiche introuvable') + ' | StartupGuineeIQ'; }
-  else { VIEWS[v](); document.title = TITLES[v] + ' | StartupGuineeIQ'; }
+  else { VIEWS[v](); document.title = v === 'accueil' ? 'StartupGuineeIQ, intelligence de l’écosystème startup guinéen' : TITLES[v] + ' | StartupGuineeIQ'; }
   // Au changement de vue : retour en haut et focus sur le titre, pour le clavier et les lecteurs d'écran
   if (!first) { window.scrollTo(0, 0); const h1 = view.querySelector('h1'); if (h1) h1.focus({ preventScroll: true }); }
   first = false;
@@ -321,8 +406,8 @@ matchMedia('(min-width: 601px)').addEventListener('change', e => { if (e.matches
 fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('erreur ' + r.status); return r.json(); }).then(data => {
   D = data;
   document.getElementById('demo').hidden = !D.contient_demo;
-  document.getElementById('meta').textContent = `${D.startups.length} fiches publiées. Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}.`;
-  document.getElementById('foot-propose').href = ISSUE('nouvelle-startup.yml', 'Nouvelle startup : ');
+  document.getElementById('meta').textContent = `Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}.`;
+  const fp = document.getElementById('foot-propose'); if (fp) fp.href = ISSUE('nouvelle-startup.yml', 'Nouvelle startup : ');
   route();
 }).catch(err => {
   view.innerHTML = `<div class="stack"><h1>Le registre n’a pas pu être chargé</h1><p>${esc(err.message)}. Réessayez dans quelques instants. En local, lancez <code>python -m http.server -d site</code> après <code>python scripts/build.py</code>.</p></div>`;
