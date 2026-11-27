@@ -32,3 +32,7 @@ Pour proposer une startup ou signaler une erreur sans toucher aux fichiers : [ou
 - [Protocole de vérification](docs/protocole-verification.md)
 - [Dictionnaire de données](docs/dictionnaire-donnees.md)
 - [Roadmap](docs/roadmap.md)
+
+## Licence
+
+Les données du registre sont publiées sous licence [CC BY 4.0](data/LICENCE.md).

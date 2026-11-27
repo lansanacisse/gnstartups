@@ -282,6 +282,12 @@ function methodologie() {
 
 const VIEWS = { repertoire, financements, indicateurs, evolutions, methodologie };
 const TITLES = { repertoire: 'Répertoire', financements: 'Financements', indicateurs: 'Indicateurs', evolutions: 'Évolutions', methodologie: 'Méthodologie' };
+/* Pages légales (assets/legal.js) : des pages de texte, qui ne dépendent pas des données du registre */
+const LEGAL = typeof sgLegal === 'function' ? sgLegal(ext) : {};
+Object.entries(LEGAL).forEach(([k, p]) => {
+  TITLES[k] = p.title;
+  VIEWS[k] = () => { view.innerHTML = `<article class="prose legal"><h1 tabindex="-1">${p.title}</h1><p class="small mute">Dernière mise à jour : ${SG_LEGAL_UPDATED}</p>${p.html}</article>`; };
+});
 let first = true;
 function route() {
   const h = location.hash.slice(1) || 'repertoire';

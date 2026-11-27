@@ -2,6 +2,11 @@
    Système : une seule police (Inter Tight), une échelle d'espacement, deux rayons (conteneurs 12px, contrôles en pilule),
    des couleurs réservées aux statuts. Le gris de fond ne sert qu'aux éléments qu'on parcourt (fiches du répertoire, panneau de statut). */
 
+/* Police hébergée sur le site (Inter, licence OFL : assets/fonts/OFL.txt) : aucune requête vers un service tiers */
+@font-face{font-family:"SG Inter";src:url(fonts/inter-400.woff) format("woff");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"SG Inter";src:url(fonts/inter-500.woff) format("woff");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"SG Inter";src:url(fonts/inter-600.woff) format("woff");font-weight:600;font-style:normal;font-display:swap}
+
 :root{color-scheme:light dark;
   --bg:light-dark(#fff,#0f0f0f);--ink:light-dark(#0a0a0a,#f2f1ee);--ink2:light-dark(#3a3938,#cfcdc9);--mute:light-dark(#6b6968,#9a9894);
   --soft:light-dark(#F5F4F2,#1c1c1b);--seg:light-dark(#F0EFED,#232322);--line:light-dark(#e4e3e0,#2e2e2c);
@@ -17,7 +22,7 @@
   --fs-s:13px;--fs:15px;--fs-l:17px;--fs-h2:20px;
 }
 *{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:var(--fs)/1.5 'Inter Tight',Inter,system-ui,sans-serif;letter-spacing:-.01em;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:var(--fs)/1.5 'SG Inter',system-ui,sans-serif;letter-spacing:-.015em;overflow-x:clip}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 h1:focus{outline:none}
@@ -40,14 +45,14 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .stack{display:flex;flex-direction:column;gap:var(--s5)}
 .page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--s4)}
 .intro{color:var(--mute);max-width:68ch;margin-top:var(--s2)}
-.foot{margin-top:var(--s7);padding:var(--s6) 0 var(--s5);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.2fr) minmax(0,.7fr);gap:var(--s5) var(--s6);font-size:14px;color:var(--ink2)}
+.foot{margin-top:var(--s7);padding:var(--s6) 0 var(--s5);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.2fr) minmax(0,.8fr) minmax(0,.9fr);gap:var(--s5) var(--s6);font-size:14px;color:var(--ink2)}
 .foot-brand{font-weight:600;font-size:var(--fs-l);color:var(--ink);letter-spacing:-.03em;margin-bottom:var(--s2)}
 .foot-about p:last-child{max-width:46ch;color:var(--mute)}
 .foot-title{font-size:12px;font-weight:600;color:var(--mute);letter-spacing:0;margin-bottom:var(--s3)}
 .legend,.foot-links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
 .legend li{display:grid;grid-template-columns:minmax(0,auto);gap:0}
 .legend li>span:last-child{font-size:var(--fs-s);color:var(--mute);padding-left:14px}
-.foot-links a{display:inline-flex;align-items:center;min-height:32px}
+.foot-links{gap:0}.foot-links a{display:inline-flex;align-items:center;min-height:32px}
 .foot-meta{grid-column:1/-1;padding-top:var(--s4);border-top:1px solid var(--line);font-size:var(--fs-s);color:var(--mute)}
 
 /* Contrôles */
@@ -177,7 +182,7 @@ td a{display:inline-block;padding-block:2px}
 
 /* Méthodologie */
 .prose{max-width:72ch;display:flex;flex-direction:column;gap:14px;font-size:16px}
-.prose h2{margin-top:var(--s4)}.prose ul{margin:0;padding-left:20px}.prose li{margin-bottom:6px}
+.prose h2{margin-top:var(--s4)}.legal h2{font-size:var(--fs-l)}.prose ol{margin:0;padding-left:22px}.prose ol li{margin-bottom:6px}.prose ul{margin:0;padding-left:20px}.prose li{margin-bottom:6px}
 dl.defs{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--s2) var(--s4);margin:0}dl.defs dt{font-weight:600}dl.defs dd{margin:0;color:var(--ink2)}
 
 @media(max-width:900px){
