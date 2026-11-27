@@ -67,7 +67,7 @@ function setFilterCount(active) {
   const ob = document.getElementById('open-filters'); if (ob) ob.setAttribute('aria-label', active ? `Filtres, ${active} actif${active > 1 ? 's' : ''}` : 'Filtres');
 }
 
-/* Carte d'une startup (répertoire, accueil) */
+/* Carte d'une startup (répertoire) */
 const entryCard = s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
    <div class="entry-head"><h2>${esc(s.nom)}</h2>${status(s.statut_activite)}</div>
    <p class="entry-meta">${esc(s.secteur)}, ${esc(s.ville)}${s.annee_creation ? ', créée en ' + s.annee_creation : ''}</p>
@@ -283,34 +283,6 @@ function methodologie() {
   </article>`;
 }
 
-/* Accueil */
-function accueil() {
-  const I = D.indicateurs, S = D.startups;
-  const done = D.financements.filter(r => r.statut === 'documente');
-  const tot = done.reduce((a, r) => a + (r.montant_usd || 0), 0);
-  const pl = (n, w) => `${n} ${w}${n > 1 ? 's' : ''}`;
-  const recent = S.filter(s => s.date_derniere_verification).sort((a, b) => a.date_derniere_verification < b.date_derniere_verification ? 1 : -1).slice(0, 3);
-  const sec = {}; S.forEach(s => { sec[s.secteur_id] = sec[s.secteur_id] || { label: s.secteur, n: 0 }; sec[s.secteur_id].n++; });
-  view.innerHTML = `<div class="stack">
-  <header class="home-head"><h1 tabindex="-1">Les startups guinéennes, vérifiées et sourcées</h1>
-   <p class="lead">StartupGuineeIQ recense les startups créées en Guinée ou actives sur le marché guinéen. Chaque fiche indique si l’entreprise est active, sur quelle preuve, et à quelle date elle a été vérifiée.</p>
-   <form class="home-search" role="search" id="home-search"><label class="field">${searchIco}<span class="sr">Rechercher une startup</span><input id="hq" type="search" placeholder="Nom, activité, fondateur" autocomplete="off"></label><button class="btn primary" type="submit">Explorer</button></form>
-  </header>
-  <p class="summary"><b>${I.par_statut_activite.active} startup${I.par_statut_activite.active > 1 ? 's' : ''} active${I.par_statut_activite.active > 1 ? 's' : ''}</b>. <b>${usd(tot)}</b> de financements documentés sur ${pl(done.length, 'opération')}. ${I.en_levee} startup${I.en_levee > 1 ? 's' : ''} en levée.</p>
-  <div class="cols">
-   <section class="stack"><div class="section-head"><h2>Dernières évolutions</h2><a href="#evolutions">Toutes les évolutions</a></div>
-    <ol class="tl">${D.evenements.slice(0, 4).map(e => `<li><p class="when">${fdate(e.date)}</p><p class="flags">${flag(lab('champ', e.champ), e.champ === 'statut_activite' ? (STATUS_FLAG[e.nouvelle_valeur] || 'fl-neu') : (EVENT_FLAG[e.champ] || 'fl-neu'))}<a href="#fiche-${esc(e.startup_id)}"><b>${esc(e.startup)}</b></a></p><p>${esc(e.motif)}</p></li>`).join('')}</ol></section>
-   <section class="stack"><div class="section-head"><h2>Récemment vérifiées</h2><a href="#explorer">Tout le répertoire</a></div>
-    <ul class="entries compact">${recent.map(s => `<li>${entryCard(s)}</li>`).join('')}</ul></section>
-  </div>
-  <section class="stack"><h2>Par secteur</h2>
-   <ul class="chips">${Object.entries(sec).sort((a, b) => b[1].n - a[1].n).map(([id, x]) => `<li><button type="button" data-home-sector="${esc(id)}">${esc(x.label)}<span class="count">${x.n}</span></button></li>`).join('')}</ul></section>
-  <section class="callout"><div><h2>Une startup manque ?</h2><p>Proposez-la : elle sera vérifiée selon la méthodologie avant d’être publiée.</p></div>${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</section>
-  </div>`;
-  document.getElementById('home-search').addEventListener('submit', e => { e.preventDefault(); Object.assign(st, { q: document.getElementById('hq').value, secteur: '', ville: '', statut: 'tous' }); location.hash = '#explorer'; });
-  view.querySelectorAll('[data-home-sector]').forEach(b => b.addEventListener('click', () => { Object.assign(st, { q: '', secteur: b.dataset.homeSector, ville: '', statut: 'tous' }); location.hash = '#explorer'; }));
-}
-
 /* À propos */
 function apropos() {
   view.innerHTML = `<article class="prose">
@@ -358,10 +330,10 @@ function contact() {
   </article>`;
 }
 
-const VIEWS = { accueil, explorer: repertoire, financements, indicateurs, methodologie, 'a-propos': apropos, contact };
-const TITLES = { accueil: 'Accueil', explorer: 'Explorer les startups', financements: 'Financements', indicateurs: 'Indicateurs', methodologie: 'Méthodologie', 'a-propos': 'À propos', contact: 'Contact' };
+const VIEWS = { explorer: repertoire, financements, indicateurs, methodologie, 'a-propos': apropos, contact };
+const TITLES = { explorer: 'Explorer les startups', financements: 'Financements', indicateurs: 'Indicateurs', methodologie: 'Méthodologie', 'a-propos': 'À propos', contact: 'Contact' };
 /* Anciennes adresses : elles ouvrent la page qui contient désormais la section, à la bonne place */
-const ALIASES = { repertoire: ['explorer'], evolutions: ['indicateurs', 'evolutions'], signalements: ['contact', 'signalements'], cookies: ['confidentialite', 'cookies'], 'propriete-intellectuelle': ['cgu', 'licence'] };
+const ALIASES = { accueil: ['explorer'], repertoire: ['explorer'], evolutions: ['indicateurs', 'evolutions'], signalements: ['contact', 'signalements'], cookies: ['confidentialite', 'cookies'], 'propriete-intellectuelle': ['cgu', 'licence'] };
 /* Pages légales (assets/legal.js) : des pages de texte, qui ne dépendent pas des données du registre */
 const LEGAL_PARTS = typeof sgLegal === 'function' ? sgLegal(ext) : {};
 /* Une section intégrée dans une autre page : ses titres descendent d'un niveau */
@@ -378,16 +350,16 @@ Object.entries(LEGAL).forEach(([k, p]) => {
 });
 let first = true;
 function route() {
-  const raw = location.hash.slice(1) || 'accueil';
+  const raw = location.hash.slice(1) || 'explorer';
   const [h, anchor] = ALIASES[raw] || [raw];
-  const v = h.startsWith('fiche-') ? 'fiche' : (VIEWS[h] ? h : 'accueil');
+  const v = h.startsWith('fiche-') ? 'fiche' : (VIEWS[h] ? h : 'explorer');
   document.querySelectorAll('#nav a, .drawer-nav a').forEach(a => {
     const on = a.dataset.v === v || (v === 'fiche' && a.dataset.v === 'explorer') || (a.dataset.v === h);
     a.classList.toggle('on', on);
     if (a.dataset.v === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
   if (v === 'fiche') { const s = D.startups.find(x => x.id === h.slice(6)); fiche(h.slice(6)); document.title = (s ? s.nom : 'Fiche introuvable') + ' | StartupGuineeIQ'; }
-  else { VIEWS[v](); document.title = v === 'accueil' ? 'StartupGuineeIQ, intelligence de l’écosystème startup guinéen' : TITLES[v] + ' | StartupGuineeIQ'; }
+  else { VIEWS[v](); document.title = v === 'explorer' ? 'StartupGuineeIQ, registre des startups guinéennes' : TITLES[v] + ' | StartupGuineeIQ'; }
   // Au changement de vue : retour en haut et focus sur le titre, pour le clavier et les lecteurs d'écran
   const target = anchor && document.getElementById(anchor);
   if (target) { target.scrollIntoView(); target.focus({ preventScroll: true }); }
