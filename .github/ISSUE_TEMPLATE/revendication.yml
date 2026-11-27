@@ -1,0 +1,27 @@
+name: Revendiquer une fiche
+description: Vous êtes fondateur ou dirigeant d'une startup du registre.
+title: "Revendication de fiche : "
+labels: ["revendication"]
+body:
+  - type: markdown
+    attributes:
+      value: La revendication vous donne un canal de contact privilégié pour signaler les mises à jour. Elle ne donne pas de droit d'édition directe. Ne publiez ici aucune pièce d'identité ni donnée personnelle.
+  - type: input
+    id: fiche
+    attributes:
+      label: Startup concernée
+    validations:
+      required: true
+  - type: input
+    id: role
+    attributes:
+      label: Votre rôle
+    validations:
+      required: true
+  - type: textarea
+    id: preuve
+    attributes:
+      label: Comment pouvons-nous confirmer votre rôle ?
+      description: Par exemple, votre rôle apparaît sur la page équipe du site officiel ou sur la page LinkedIn de l'entreprise. Nous vous contacterons ensuite par un canal officiel de l'entreprise.
+    validations:
+      required: true

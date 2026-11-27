@@ -1,0 +1,13 @@
+id,libelle,description
+fintech,Fintech,"Paiement, banque, assurance, crédit."
+agritech,Agritech,"Agriculture, élevage, agroalimentaire."
+sante,Santé,"Télémédecine, pharmacie, services de santé."
+edtech,Edtech,Éducation et formation.
+logistique,Logistique,"Transport de marchandises, livraison."
+energie,Énergie,"Énergie solaire, accès à l'électricité."
+industrie,Industrie et mines,Services numériques pour l'industrie et les mines.
+e-commerce,E-commerce,"Vente en ligne, marketplaces."
+proptech,Proptech,Immobilier.
+mobilite,Mobilité,Transport de personnes.
+services-numeriques,Services numériques,"Logiciels, SaaS et services aux entreprises."
+medias,Médias et contenus,"Médias, divertissement, création de contenus."

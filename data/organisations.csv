@@ -1,0 +1,8 @@
+id,nom,type,pays,site_web,demo
+boulbinet-angels,Boulbinet Angels,investisseur,GN,,true
+loos-capital,Loos Capital,investisseur,GN,,true
+fonds-sankaran,Fonds Sankaran,investisseur,GN,,true
+programme-agricole-regional,Programme agricole régional,programme,GN,,true
+programme-jeunes-entrepreneurs,Programme jeunes entrepreneurs,programme,GN,,true
+concours-innovation,Concours d’innovation,programme,GN,,true
+fria-hub,Fria Hub (incubateur),incubateur,GN,,true

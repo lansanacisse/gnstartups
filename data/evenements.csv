@@ -1,0 +1,9 @@
+id,startup_id,date,champ,ancienne_valeur,nouvelle_valeur,motif,source_ids,demo
+evt-kaloum-immo-2026-11-20,kaloum-immo,2026-11-20,ajout,,a_verifier,"Repérée via un incubateur partenaire, en attente de vérification.",src-kaloum-immo-verif,true
+evt-sabou-pay-2026-11-12,sabou-pay,2026-11-12,statut_verification,a_verifier,verifiee,Activité confirmée après entretien avec la fondatrice.,src-sabou-pay-verif,true
+evt-tinkisso-sante-2026-10-30,tinkisso-sante,2026-10-30,financement,levee_documentee,en_cours_declare,Recherche 600 k$ en seed pour s’étendre à deux nouvelles régions.,src-tinkisso-levee,true
+evt-fonio-lab-2026-10-28,fonio-lab,2026-10-28,financement,levee_documentee,en_cours_declare,Ouverture d’un tour pré-seed auprès d’investisseurs à impact.,src-fonio-levee,true
+evt-wakili-logistique-2026-10-05,wakili-logistique,2026-10-05,statut_activite,active,interrompue,Site hors ligne et contacts sans réponse depuis plusieurs mois.,src-wakili-logistique-verif,true
+evt-bauxi-data-2026-09-18,bauxi-data,2026-09-18,ajout,,a_verifier,"Nouvelle startup détectée, aucune confirmation directe.",src-bauxi-data-detection,true
+evt-djoliba-energie-2026-08-02,djoliba-energie,2026-08-02,statut_verification,a_verifier,verifiee,Activité confirmée par la publication d’un rapport annuel.,src-djoliba-energie-verif,true
+evt-mafe-market-2025-09-14,mafe-market,2025-09-14,statut_activite,active,fermee,Fermeture annoncée par le fondateur.,src-mafe-market-verif,true

@@ -1,0 +1,19 @@
+name: Signaler une information incorrecte
+description: Corriger une fiche du registre.
+title: "Correction : "
+labels: ["contribution", "correction"]
+body:
+  - type: textarea
+    id: details
+    attributes:
+      label: Correction
+      description: Quelle fiche, quelle information, quelle est la valeur correcte ?
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: Lien ou explication qui justifie la correction. Sans source, la correction ne peut pas être publiée.
+    validations:
+      required: true

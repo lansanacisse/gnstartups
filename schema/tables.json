@@ -1,0 +1,249 @@
+{
+  "version": "0.1.0",
+  "description": "Modèle de données du référentiel Startup Guinée. Source unique : la validation (scripts/validate.py), le dictionnaire (docs/dictionnaire-donnees.md) et le schéma PostgreSQL (sql/schema.sql) sont générés à partir de ce fichier.",
+  "enums": {
+    "categorie": {
+      "startup": "Entreprise innovante avec une activité identifiable et une ambition de croissance reproductible.",
+      "projet_precoce": "Projet en phase d'idée ou de prototype, sans activité commerciale identifiable. Jamais compté comme startup établie."
+    },
+    "statut_activite": {
+      "active": "Activité constatée par une preuve datée de moins de 6 mois.",
+      "interrompue": "Plusieurs signaux convergents d'arrêt (site hors ligne, contacts sans réponse...), sans déclaration de fermeture.",
+      "fermee": "Fermeture déclarée par l'entreprise, ses fondateurs ou un registre officiel.",
+      "inconnue": "Aucune preuve suffisante pour statuer."
+    },
+    "statut_verification": {
+      "a_verifier": "Fiche collectée, pas encore vérifiée.",
+      "verifiee": "Informations essentielles confirmées selon le protocole.",
+      "contestee": "Une information est contestée par l'entreprise ou un tiers ; vérification en cours."
+    },
+    "niveau_confiance": {
+      "eleve": "Confirmé par une source primaire (entreprise, registre, investisseur) ou deux sources indépendantes.",
+      "moyen": "Une seule source secondaire crédible (presse, incubateur).",
+      "faible": "Signal indirect ou source non vérifiable."
+    },
+    "type_source": {
+      "site_officiel": "Site web ou application de l'entreprise.",
+      "registre": "Registre officiel (APIP, RCCM, Journal officiel...).",
+      "communique": "Communiqué de l'entreprise ou d'un investisseur.",
+      "presse": "Article de presse.",
+      "entretien": "Entretien direct avec un fondateur ou un salarié.",
+      "incubateur": "Information transmise par un incubateur, accélérateur ou programme.",
+      "reseau_professionnel": "Page ou publication sur un réseau professionnel (LinkedIn...).",
+      "contribution": "Contribution externe reçue via le formulaire de signalement.",
+      "autre": "Autre type de source, à préciser dans le titre."
+    },
+    "type_financement": {
+      "investissement": "Prise de participation ou instrument convertible (BSA-AIR, SAFE...).",
+      "subvention": "Financement non dilutif sans contrepartie en capital.",
+      "prix": "Dotation d'un prix ou d'un concours.",
+      "dette": "Prêt bancaire, prêt d'honneur, dette venture.",
+      "autre": "Autre forme, à préciser dans les notes."
+    },
+    "tour": {
+      "pre_seed": "Pré-amorçage.",
+      "seed": "Amorçage.",
+      "serie_a": "Série A.",
+      "serie_b": "Série B.",
+      "serie_c_plus": "Série C et au-delà.",
+      "non_applicable": "Pas un tour d'investissement (subvention, prix, dette).",
+      "inconnu": "Type de tour non communiqué."
+    },
+    "statut_financement_operation": {
+      "documente": "Opération réalisée et attestée par une source.",
+      "en_cours_declare": "Levée annoncée comme en cours par l'entreprise, non finalisée."
+    },
+    "type_organisation": {
+      "investisseur": "Fonds, business angels, réseau d'investisseurs.",
+      "incubateur": "Incubateur ou accélérateur.",
+      "programme": "Programme d'appui, concours, bailleur.",
+      "entreprise": "Entreprise partenaire ou corporate.",
+      "institution": "Institution publique ou internationale."
+    },
+    "methode_verification": {
+      "entretien": "Échange direct avec l'entreprise.",
+      "verification_en_ligne": "Contrôle du site, de l'application, des réseaux.",
+      "registre": "Consultation d'un registre officiel.",
+      "tiers": "Confirmation par un incubateur, investisseur ou partenaire.",
+      "visite": "Visite sur place."
+    }
+  },
+  "tables": [
+    {
+      "name": "secteurs",
+      "file": "data/referentiels/secteurs.csv",
+      "description": "Référentiel des secteurs d'activité.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "libelle", "type": "text", "required": true, "description": "Nom affiché."},
+        {"name": "description", "type": "text", "required": false, "description": "Périmètre du secteur."}
+      ]
+    },
+    {
+      "name": "villes",
+      "file": "data/referentiels/villes.csv",
+      "description": "Référentiel des villes (siège ou implantation).",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "nom", "type": "text", "required": true, "description": "Nom de la ville."},
+        {"name": "region", "type": "text", "required": true, "description": "Région administrative."},
+        {"name": "pays", "type": "text", "required": true, "description": "Code pays ISO 3166-1 alpha-2."}
+      ]
+    },
+    {
+      "name": "sources",
+      "file": "data/sources.csv",
+      "description": "Toute preuve utilisée dans le référentiel. Chaque information importante renvoie à au moins une source.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "type", "type": "enum", "enum": "type_source", "required": true, "description": "Nature de la source."},
+        {"name": "titre", "type": "text", "required": true, "description": "Titre ou description courte de la preuve."},
+        {"name": "url", "type": "url", "required": false, "description": "Lien vers la preuve. Obligatoire sauf pour les entretiens et contributions."},
+        {"name": "editeur", "type": "text", "required": false, "description": "Média, organisation ou personne à l'origine de la source."},
+        {"name": "date_publication", "type": "date", "required": false, "description": "Date de publication de la source."},
+        {"name": "date_collecte", "type": "date", "required": true, "description": "Date à laquelle la source a été collectée."},
+        {"name": "archive_url", "type": "url", "required": false, "description": "Copie archivée (web.archive.org...) pour garder la preuve si la page disparaît."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive (données de démonstration)."}
+      ]
+    },
+    {
+      "name": "startups",
+      "file": "data/startups.csv",
+      "description": "Une ligne par entreprise recensée. Regroupe les domaines Startup, Identification et Activité.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant stable (kebab-case), ne change jamais même si le nom change."},
+        {"name": "nom", "type": "text", "required": true, "description": "Nom commercial."},
+        {"name": "categorie", "type": "enum", "enum": "categorie", "required": true, "description": "Startup établie ou projet précoce."},
+        {"name": "description", "type": "text", "required": true, "description": "Ce que fait l'entreprise, en une ou deux phrases factuelles."},
+        {"name": "secteur_id", "type": "ref", "ref": "secteurs", "required": true, "description": "Secteur principal."},
+        {"name": "ville_id", "type": "ref", "ref": "villes", "required": true, "description": "Ville du siège ou de l'activité principale."},
+        {"name": "annee_creation", "type": "int", "required": false, "description": "Année de création (ou de lancement si la date juridique est inconnue)."},
+        {"name": "site_web", "type": "url", "required": false, "description": "Site officiel."},
+        {"name": "linkedin_url", "type": "url", "required": false, "description": "Page LinkedIn de l'entreprise."},
+        {"name": "raison_sociale", "type": "text", "required": false, "description": "Dénomination juridique."},
+        {"name": "forme_juridique", "type": "text", "required": false, "description": "SARL, SARLU, SA, SAS..."},
+        {"name": "pays_immatriculation", "type": "text", "required": false, "description": "Code pays ISO 3166-1 alpha-2 de l'entité juridique principale."},
+        {"name": "rccm", "type": "text", "required": false, "description": "Numéro RCCM s'il est public."},
+        {"name": "date_creation_juridique", "type": "date", "required": false, "description": "Date d'immatriculation."},
+        {"name": "effectif", "type": "text", "required": false, "description": "Tranche d'effectif (1-5, 5-10, 10-25, 25-50, 50-100, 100+)."},
+        {"name": "statut_activite", "type": "enum", "enum": "statut_activite", "required": true, "description": "Statut de l'entreprise."},
+        {"name": "statut_verification", "type": "enum", "enum": "statut_verification", "required": true, "description": "Statut de vérification de la fiche."},
+        {"name": "niveau_confiance", "type": "enum", "enum": "niveau_confiance", "required": true, "description": "Confiance globale dans la fiche."},
+        {"name": "date_derniere_verification", "type": "date", "required": false, "description": "Date de la dernière vérification (reprise de la table verifications)."},
+        {"name": "source_ids", "type": "ref_list", "ref": "sources", "required": false, "description": "Sources des informations générales, séparées par ';'."},
+        {"name": "publie", "type": "bool", "required": true, "description": "true si la fiche est visible sur le site."},
+        {"name": "date_ajout", "type": "date", "required": true, "description": "Date d'entrée dans le référentiel."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    },
+    {
+      "name": "fondateurs",
+      "file": "data/fondateurs.csv",
+      "description": "Fondateurs et cofondateurs, uniquement avec des informations professionnelles publiques.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "startup_id", "type": "ref", "ref": "startups", "required": true, "description": "Startup concernée."},
+        {"name": "nom", "type": "text", "required": true, "description": "Prénom et nom."},
+        {"name": "role", "type": "text", "required": true, "description": "Rôle (Fondatrice et CEO, Cofondateur et CTO...)."},
+        {"name": "linkedin_url", "type": "url", "required": false, "description": "Profil LinkedIn exact (pas une recherche)."},
+        {"name": "source_ids", "type": "ref_list", "ref": "sources", "required": true, "description": "Preuves du rôle."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    },
+    {
+      "name": "organisations",
+      "file": "data/organisations.csv",
+      "description": "Investisseurs, incubateurs, programmes et partenaires.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "nom", "type": "text", "required": true, "description": "Nom de l'organisation."},
+        {"name": "type", "type": "enum", "enum": "type_organisation", "required": true, "description": "Nature de l'organisation."},
+        {"name": "pays", "type": "text", "required": false, "description": "Code pays ISO 3166-1 alpha-2."},
+        {"name": "site_web", "type": "url", "required": false, "description": "Site officiel."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    },
+    {
+      "name": "financements",
+      "file": "data/financements.csv",
+      "description": "Opérations de financement. Investissements, subventions, prix et dette sont distingués.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "startup_id", "type": "ref", "ref": "startups", "required": true, "description": "Startup financée."},
+        {"name": "date", "type": "date", "required": true, "description": "Date d'annonce ou de clôture."},
+        {"name": "type_financement", "type": "enum", "enum": "type_financement", "required": true, "description": "Nature du financement."},
+        {"name": "tour", "type": "enum", "enum": "tour", "required": true, "description": "Tour d'investissement."},
+        {"name": "statut", "type": "enum", "enum": "statut_financement_operation", "required": true, "description": "Réalisé ou en cours déclaré."},
+        {"name": "montant", "type": "decimal", "required": false, "description": "Montant dans la devise d'origine. Vide si non divulgué."},
+        {"name": "devise", "type": "text", "required": false, "description": "Code ISO 4217 (GNF, USD, EUR, XOF...). Obligatoire si montant renseigné."},
+        {"name": "montant_usd", "type": "decimal", "required": false, "description": "Contre-valeur en USD au taux de la date de l'opération, pour les agrégats."},
+        {"name": "investisseur_ids", "type": "ref_list", "ref": "organisations", "required": false, "description": "Investisseurs ou financeurs connus, séparés par ';'."},
+        {"name": "investisseurs_non_identifies", "type": "text", "required": false, "description": "Mention libre si les financeurs ne sont pas nommés (business angels non divulgués...)."},
+        {"name": "source_ids", "type": "ref_list", "ref": "sources", "required": true, "description": "Preuves de l'opération. Aucune levée publiée sans source."},
+        {"name": "notes", "type": "text", "required": false, "description": "Précisions."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    },
+    {
+      "name": "accompagnements",
+      "file": "data/accompagnements.csv",
+      "description": "Liens avec l'écosystème : incubation, accélération, programmes, partenariats.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "startup_id", "type": "ref", "ref": "startups", "required": true, "description": "Startup accompagnée."},
+        {"name": "organisation_id", "type": "ref", "ref": "organisations", "required": true, "description": "Organisation."},
+        {"name": "programme", "type": "text", "required": false, "description": "Nom du programme ou de la promotion."},
+        {"name": "annee", "type": "int", "required": false, "description": "Année de l'accompagnement."},
+        {"name": "source_ids", "type": "ref_list", "ref": "sources", "required": true, "description": "Preuves."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    },
+    {
+      "name": "verifications",
+      "file": "data/verifications.csv",
+      "description": "Journal des vérifications. Une ligne par vérification, jamais modifiée après coup.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "startup_id", "type": "ref", "ref": "startups", "required": true, "description": "Startup vérifiée."},
+        {"name": "date", "type": "date", "required": true, "description": "Date de la vérification."},
+        {"name": "methode", "type": "enum", "enum": "methode_verification", "required": true, "description": "Méthode utilisée."},
+        {"name": "statut_constate", "type": "enum", "enum": "statut_activite", "required": true, "description": "Statut d'activité constaté à cette date."},
+        {"name": "resume", "type": "text", "required": true, "description": "Ce qui a été constaté, en une phrase."},
+        {"name": "verifie_par", "type": "text", "required": true, "description": "Initiales ou pseudonyme de la personne qui a vérifié."},
+        {"name": "source_ids", "type": "ref_list", "ref": "sources", "required": true, "description": "Preuves."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    },
+    {
+      "name": "evenements",
+      "file": "data/evenements.csv",
+      "description": "Historique public des changements de statut (détection, confirmation, interruption, fermeture, levée). Alimente Watch.",
+      "columns": [
+        {"name": "id", "type": "id", "required": true, "description": "Identifiant (kebab-case)."},
+        {"name": "startup_id", "type": "ref", "ref": "startups", "required": true, "description": "Startup concernée."},
+        {"name": "date", "type": "date", "required": true, "description": "Date de l'événement."},
+        {"name": "champ", "type": "text", "required": true, "description": "Champ modifié (statut_activite, statut_verification, financement, ajout...)."},
+        {"name": "ancienne_valeur", "type": "text", "required": false, "description": "Valeur avant le changement (vide pour un ajout)."},
+        {"name": "nouvelle_valeur", "type": "text", "required": true, "description": "Valeur après le changement."},
+        {"name": "motif", "type": "text", "required": true, "description": "Raison du changement, en une phrase."},
+        {"name": "source_ids", "type": "ref_list", "ref": "sources", "required": true, "description": "Preuves."},
+        {"name": "demo", "type": "bool", "required": true, "description": "true si la ligne est fictive."}
+      ]
+    }
+  ],
+  "rules": [
+    "Les identifiants sont uniques dans chaque table et en kebab-case (a-z, 0-9, tirets).",
+    "Chaque référence (ref, ref_list) pointe vers une ligne existante.",
+    "Les dates sont au format AAAA-MM-JJ et ne sont pas dans le futur.",
+    "Une fiche publiée (publie = true) a au moins une source et une date de dernière vérification.",
+    "Une fiche « verifiee » a au moins une ligne dans verifications.",
+    "date_derniere_verification est égale à la date la plus récente dans verifications pour cette startup.",
+    "Un statut « interrompue » ou « fermee » s'appuie sur au moins une vérification qui constate ce statut : l'absence de publication ne suffit jamais.",
+    "Un statut « active » est accompagné d'une vérification de moins de 6 mois ; au-delà, la fiche est signalée « à actualiser ».",
+    "Une source sans URL n'est admise que pour un entretien ou une contribution.",
+    "Un montant de financement est toujours accompagné de sa devise d'origine.",
+    "Une subvention ou un prix a pour tour « non_applicable ».",
+    "Une ligne réelle ne cite jamais une ligne de démonstration (demo = true). Les lignes de démonstration disparaissent avant le lancement public (validation --strict).",
+    "Deux startups au nom très proche déclenchent un avertissement de doublon possible."
+  ]
+}
