@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)">
 <title>Startup Guinée, registre des startups guinéennes</title>
 <meta name="description" content="Registre indépendant des startups guinéennes : statut d’activité, financements, sources et date de dernière vérification pour chaque entreprise.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0a0a'/%3E%3Ctext x='16' y='21.5' font-family='Arial,sans-serif' font-size='14' font-weight='700' fill='%23fff' text-anchor='middle'%3ESG%3C/text%3E%3C/svg%3E">
@@ -12,16 +14,16 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<p id="demo" class="demo" hidden>Version de démonstration : les startups, financements et sources affichés sont fictifs. Le référentiel réel est en cours de constitution.</p>
+<p id="demo" class="demo" hidden><span class="wide">Version de démonstration : les startups, financements et sources affichés sont fictifs. Le référentiel réel est en cours de constitution.</span><span class="narrow">Démonstration : données fictives.</span></p>
 <header class="wrap top">
   <a class="brand" href="#repertoire"><b>Startup Guinée</b><span>Registre des startups</span></a>
-  <nav aria-label="Sections">
+  <nav class="tabs" aria-label="Sections">
     <div class="seg" id="nav">
-      <a href="#repertoire" data-v="repertoire">Répertoire</a>
-      <a href="#financements" data-v="financements">Financements</a>
-      <a href="#indicateurs" data-v="indicateurs">Indicateurs</a>
-      <a href="#evolutions" data-v="evolutions">Évolutions</a>
-      <a href="#methodologie" data-v="methodologie">Méthodologie</a>
+      <a href="#repertoire" data-v="repertoire" aria-label="Répertoire"><span class="wide">Répertoire</span><span class="narrow">Startups</span></a>
+      <a href="#financements" data-v="financements" aria-label="Financements"><span class="wide">Financements</span><span class="narrow">Levées</span></a>
+      <a href="#indicateurs" data-v="indicateurs" aria-label="Indicateurs"><span class="wide">Indicateurs</span><span class="narrow">Chiffres</span></a>
+      <a href="#evolutions" data-v="evolutions" aria-label="Évolutions"><span class="wide">Évolutions</span><span class="narrow">Suivi</span></a>
+      <a href="#methodologie" data-v="methodologie" aria-label="Méthodologie"><span class="wide">Méthodologie</span><span class="narrow">Méthode</span></a>
     </div>
   </nav>
 </header>
