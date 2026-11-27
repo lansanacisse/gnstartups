@@ -15,25 +15,28 @@
 <p id="demo" class="demo" hidden><span class="wide">Version de démonstration : les startups, financements et sources affichés sont fictifs. Le référentiel réel est en cours de constitution.</span><span class="narrow">Démonstration : données fictives.</span></p>
 <header class="wrap top">
   <button type="button" id="menu-btn" class="icon-btn narrow-flex" aria-label="Ouvrir le menu" aria-haspopup="dialog" aria-controls="drawer" aria-expanded="false"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  <a class="brand" href="#repertoire"><b>StartupGuineeIQ</b><span>Intelligence de l’écosystème startup</span></a>
+  <a class="brand" href="#accueil"><b>StartupGuineeIQ</b><span>Intelligence de l’écosystème startup</span></a>
   <nav class="tabs" aria-label="Sections">
     <div class="seg" id="nav">
-      <a href="#repertoire" data-v="repertoire">Répertoire</a>
+      <a href="#explorer" data-v="explorer">Explorer</a>
       <a href="#financements" data-v="financements">Financements</a>
       <a href="#indicateurs" data-v="indicateurs">Indicateurs</a>
-      <a href="#evolutions" data-v="evolutions">Évolutions</a>
       <a href="#methodologie" data-v="methodologie">Méthodologie</a>
+      <a href="#a-propos" data-v="a-propos">À propos</a>
     </div>
   </nav>
 </header>
 <dialog id="drawer" class="drawer" aria-label="Menu">
   <div class="drawer-head"><span class="drawer-brand">StartupGuineeIQ</span><button type="button" class="icon-btn" data-close-drawer aria-label="Fermer le menu"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <nav aria-label="Sections du site"><ul class="drawer-nav">
-    <li><a href="#repertoire" data-v="repertoire" data-close-drawer><b>Répertoire</b><span>Toutes les startups recensées</span></a></li>
+    <li><a href="#accueil" data-v="accueil" data-close-drawer><b>Accueil</b><span>Chiffres clés et dernières évolutions</span></a></li>
+    <li><a href="#explorer" data-v="explorer" data-close-drawer><b>Explorer les startups</b><span>Le répertoire, avec recherche et filtres</span></a></li>
     <li><a href="#financements" data-v="financements" data-close-drawer><b>Financements</b><span>Levées, subventions et prix documentés</span></a></li>
     <li><a href="#indicateurs" data-v="indicateurs" data-close-drawer><b>Indicateurs</b><span>Qualité des données et chiffres de l’écosystème</span></a></li>
     <li><a href="#evolutions" data-v="evolutions" data-close-drawer><b>Évolutions</b><span>Ajouts, vérifications et changements de statut</span></a></li>
-    <li><a href="#methodologie" data-v="methodologie" data-close-drawer><b>Méthodologie</b><span>Définitions, règles de vérification, contribution</span></a></li>
+    <li><a href="#methodologie" data-v="methodologie" data-close-drawer><b>Méthodologie</b><span>Définitions et règles de vérification</span></a></li>
+    <li><a href="#a-propos" data-v="a-propos" data-close-drawer><b>À propos</b><span>Le projet et ses principes</span></a></li>
+    <li><a href="#contact" data-v="contact" data-close-drawer><b>Contact</b><span>Écrire à l’équipe</span></a></li>
   </ul></nav>
   <p class="drawer-foot"><a href="https://github.com/lansanacisse/gnstartups/issues/new?template=nouvelle-startup.yml&amp;title=Nouvelle%20startup%20%3A%20" target="_blank" rel="noopener noreferrer">Proposer une startup<span class="sr"> (nouvel onglet)</span></a></p>
 </dialog>
@@ -45,30 +48,38 @@
     <p>Registre indépendant des startups guinéennes. Chaque statut s’appuie sur une preuve datée ; une absence d’information récente ne vaut jamais preuve de fermeture.</p>
   </div>
   <div>
-    <h2 class="foot-title">Situations</h2>
-    <ul class="legend">
-      <li><span class="status st-active">Active</span><span>activité prouvée il y a moins de 6 mois</span></li>
-      <li><span class="status st-interrompue">Activité interrompue</span><span>plusieurs signaux d’arrêt, sans fermeture déclarée</span></li>
-      <li><span class="status st-fermee">Fermée</span><span>fermeture déclarée par l’entreprise ou un registre</span></li>
-      <li><span class="status st-inconnue">Statut inconnu</span><span>pas assez de preuves pour statuer</span></li>
-    </ul>
-  </div>
-  <div>
-    <h2 class="foot-title">Le registre</h2>
+    <h2 class="foot-title">Plateforme</h2>
     <ul class="foot-links">
-      <li><a href="#methodologie">Méthodologie</a></li>
-      <li><a id="foot-propose" href="https://github.com/lansanacisse/gnstartups/issues/new/choose" target="_blank" rel="noopener noreferrer">Proposer une startup<span class="sr"> (nouvel onglet)</span></a></li>
+      <li><a href="#accueil">Accueil</a></li>
+      <li><a href="#explorer">Explorer les startups</a></li>
+      <li><a href="#evolutions">Évolutions</a></li>
     </ul>
   </div>
   <div>
-    <h2 class="foot-title">Informations légales</h2>
+    <h2 class="foot-title">Données</h2>
+    <ul class="foot-links">
+      <li><a href="#financements">Financements</a></li>
+      <li><a href="#indicateurs">Indicateurs</a></li>
+      <li><a href="data/registre.json">Télécharger les données</a></li>
+    </ul>
+  </div>
+  <div>
+    <h2 class="foot-title">Organisation</h2>
+    <ul class="foot-links">
+      <li><a href="#a-propos">À propos</a></li>
+      <li><a href="#methodologie">Méthodologie</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#signalements">Signalements</a></li>
+    </ul>
+  </div>
+  <div>
+    <h2 class="foot-title">Légal</h2>
     <ul class="foot-links">
       <li><a href="#mentions-legales">Mentions légales</a></li>
       <li><a href="#confidentialite">Confidentialité</a></li>
       <li><a href="#cookies">Cookies</a></li>
       <li><a href="#cgu">Conditions d’utilisation</a></li>
       <li><a href="#propriete-intellectuelle">Propriété intellectuelle</a></li>
-      <li><a href="#signalements">Signalements</a></li>
     </ul>
   </div>
   <p class="foot-meta" id="meta"></p>

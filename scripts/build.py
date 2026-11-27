@@ -69,6 +69,7 @@ def main():
             "secteur": secteurs[s["secteur_id"]]["libelle"], "secteur_id": s["secteur_id"],
             "ville": villes[s["ville_id"]]["nom"], "ville_id": s["ville_id"], "region": villes[s["ville_id"]]["region"],
             "annee_creation": s["annee_creation"], "site_web": s["site_web"], "linkedin_url": s["linkedin_url"],
+            "x_url": s["x_url"], "facebook_url": s["facebook_url"], "instagram_url": s["instagram_url"],
             "raison_sociale": s["raison_sociale"], "forme_juridique": s["forme_juridique"],
             "pays_immatriculation": s["pays_immatriculation"], "rccm": s["rccm"],
             "date_creation_juridique": s["date_creation_juridique"], "effectif": s["effectif"],

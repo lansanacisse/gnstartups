@@ -2,7 +2,7 @@
 
 > Fichier généré par `scripts/gen_docs.py` depuis `schema/tables.json`. Ne pas modifier à la main.
 
-Version du schéma : **0.1.0**
+Version du schéma : **0.2.0**
 
 Modèle de données du référentiel StartupGuineeIQ. Source unique : la validation (scripts/validate.py), le dictionnaire (docs/dictionnaire-donnees.md) et le schéma PostgreSQL (sql/schema.sql) sont générés à partir de ce fichier.
 
@@ -79,6 +79,9 @@ Fichier : `data/startups.csv`
 | `annee_creation` | entier | non | Année de création (ou de lancement si la date juridique est inconnue). |
 | `site_web` | URL | non | Site officiel. |
 | `linkedin_url` | URL | non | Page LinkedIn de l'entreprise. |
+| `x_url` | URL | non | Compte X (Twitter) officiel. |
+| `facebook_url` | URL | non | Page Facebook officielle. |
+| `instagram_url` | URL | non | Compte Instagram officiel. |
 | `raison_sociale` | texte | non | Dénomination juridique. |
 | `forme_juridique` | texte | non | SARL, SARLU, SA, SAS... |
 | `pays_immatriculation` | texte | non | Code pays ISO 3166-1 alpha-2 de l'entité juridique principale. |

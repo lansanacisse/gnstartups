@@ -1,6 +1,6 @@
 -- Schéma PostgreSQL du référentiel StartupGuineeIQ (cible : Supabase).
 -- Fichier généré par scripts/gen_docs.py depuis schema/tables.json. Ne pas modifier à la main.
--- Version du schéma : 0.1.0
+-- Version du schéma : 0.2.0
 
 begin;
 
@@ -78,6 +78,9 @@ create table startups (
   annee_creation integer,
   site_web text check (site_web ~ '^https?://'),
   linkedin_url text check (linkedin_url ~ '^https?://'),
+  x_url text check (x_url ~ '^https?://'),
+  facebook_url text check (facebook_url ~ '^https?://'),
+  instagram_url text check (instagram_url ~ '^https?://'),
   raison_sociale text,
   forme_juridique text,
   pays_immatriculation text,
@@ -105,6 +108,9 @@ comment on column startups.ville_id is 'Ville du siège ou de l''activité princ
 comment on column startups.annee_creation is 'Année de création (ou de lancement si la date juridique est inconnue).';
 comment on column startups.site_web is 'Site officiel.';
 comment on column startups.linkedin_url is 'Page LinkedIn de l''entreprise.';
+comment on column startups.x_url is 'Compte X (Twitter) officiel.';
+comment on column startups.facebook_url is 'Page Facebook officielle.';
+comment on column startups.instagram_url is 'Compte Instagram officiel.';
 comment on column startups.raison_sociale is 'Dénomination juridique.';
 comment on column startups.forme_juridique is 'SARL, SARLU, SA, SAS...';
 comment on column startups.pays_immatriculation is 'Code pays ISO 3166-1 alpha-2 de l''entité juridique principale.';
