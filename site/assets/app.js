@@ -258,12 +258,10 @@ let first = true;
 function route() {
   const h = location.hash.slice(1) || 'repertoire';
   const v = h.startsWith('fiche-') ? 'fiche' : (VIEWS[h] ? h : 'repertoire');
-  document.querySelectorAll('#nav a').forEach(a => {
+  document.querySelectorAll('#nav a, .drawer-nav a').forEach(a => {
     const on = a.dataset.v === v || (v === 'fiche' && a.dataset.v === 'repertoire');
     a.classList.toggle('on', on);
     if (a.dataset.v === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
-    // Sur mobile, la navigation défile : on garde l'onglet actif visible
-    if (on) a.parentElement.scrollLeft = Math.max(0, a.offsetLeft - a.parentElement.offsetLeft - 8);
   });
   if (v === 'fiche') { const s = D.startups.find(x => x.id === h.slice(6)); fiche(h.slice(6)); document.title = (s ? s.nom : 'Fiche introuvable') + ' | Startup Guinée'; }
   else { VIEWS[v](); document.title = TITLES[v] + ' | Startup Guinée'; }
@@ -282,6 +280,14 @@ document.addEventListener('click', e => {
   }
 });
 window.addEventListener('hashchange', route);
+
+/* Menu latéral (téléphone) : dialog modal, donc focus piégé et touche Échap gérés par le navigateur */
+const drawer = document.getElementById('drawer'), menuBtn = document.getElementById('menu-btn');
+menuBtn.addEventListener('click', () => { drawer.showModal(); menuBtn.setAttribute('aria-expanded', 'true'); });
+drawer.addEventListener('click', e => { if (e.target === drawer || e.target.closest('[data-close-drawer]')) drawer.close(); });
+drawer.addEventListener('close', () => menuBtn.setAttribute('aria-expanded', 'false'));
+// Si l'écran s'élargit (rotation), le menu n'a plus lieu d'être
+matchMedia('(min-width: 601px)').addEventListener('change', e => { if (e.matches && drawer.open) drawer.close(); });
 
 fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('erreur ' + r.status); return r.json(); }).then(data => {
   D = data;
