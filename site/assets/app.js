@@ -246,15 +246,14 @@ function indicateurs() {
    <section class="stack"><h2>Fiches par secteur</h2>${bars(secRows, secRows.length ? secRows[0][1] : 0)}</section>
   </div>
   <section class="stack"><div><h2>Montants documentés par année</h2><p class="small mute">Contre-valeur en dollars US, opérations réalisées uniquement.</p></div>${bars(yRows, Math.max(0, ...yRows.map(r => r[1])))}</section>
+  <section class="stack" id="evolutions" tabindex="-1"><div><h2>Évolutions</h2><p class="small mute">Ajouts au registre, vérifications, levées, interruptions et fermetures, du plus récent au plus ancien. Chaque changement cite sa preuve.</p></div>${evolutionsList()}</section>
   </div>`;
 }
 
 /* Évolutions */
-function evolutions() {
+function evolutionsList() {
   const E = D.evenements;
-  view.innerHTML = `<div class="stack">
-  <div><h1 tabindex="-1">Évolutions</h1><p class="intro">Ajouts au registre, vérifications, levées, interruptions et fermetures, du plus récent au plus ancien. Chaque changement cite sa preuve.</p></div>
-  ${E.length ? `<ol class="tl">${E.map(e => `<li><p class="when">${fdate(e.date)}</p><p class="flags">${flag(lab('champ', e.champ), e.champ === 'statut_activite' ? (STATUS_FLAG[e.nouvelle_valeur] || 'fl-neu') : (EVENT_FLAG[e.champ] || 'fl-neu'))}<a href="#fiche-${esc(e.startup_id)}"><b>${esc(e.startup)}</b></a></p><p>${esc(e.motif)}</p>${srcLine(e.sources)}</li>`).join('')}</ol>` : '<p class="empty">Aucun événement enregistré.</p>'}</div>`;
+  return E.length ? `<ol class="tl">${E.map(e => `<li><p class="when">${fdate(e.date)}</p><p class="flags">${flag(lab('champ', e.champ), e.champ === 'statut_activite' ? (STATUS_FLAG[e.nouvelle_valeur] || 'fl-neu') : (EVENT_FLAG[e.champ] || 'fl-neu'))}<a href="#fiche-${esc(e.startup_id)}"><b>${esc(e.startup)}</b></a></p><p>${esc(e.motif)}</p>${srcLine(e.sources)}</li>`).join('')}</ol>` : '<p class="empty">Aucun événement enregistré.</p>';
 }
 
 /* Méthodologie */
@@ -353,15 +352,26 @@ function contact() {
   <ul><li>${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup')}</li>
   <li>${ext(ISSUE('correction.yml', 'Correction : '), 'Signaler une information incorrecte')}</li>
   <li>${ext(ISSUE('revendication.yml', 'Revendication de fiche : '), 'Revendiquer la fiche de votre startup')}</li></ul>
-  <p class="small mute">Ces formulaires sont visibles par tous : n’y indiquez aucune information personnelle. Voir la <a href="#signalements">politique de gestion des signalements</a>.</p>
+  <p class="small mute">Ces formulaires sont visibles par tous : n’y indiquez aucune information personnelle.</p>
+  <h2 id="signalements" tabindex="-1">Gestion des signalements</h2>
+  ${LEGAL_PARTS.signalements ? sub(LEGAL_PARTS.signalements.html) : ''}
   </article>`;
 }
 
-const VIEWS = { accueil, explorer: repertoire, financements, indicateurs, evolutions, methodologie, 'a-propos': apropos, contact };
-const TITLES = { accueil: 'Accueil', explorer: 'Explorer les startups', financements: 'Financements', indicateurs: 'Indicateurs', evolutions: 'Évolutions', methodologie: 'Méthodologie', 'a-propos': 'À propos', contact: 'Contact' };
-const ALIASES = { repertoire: 'explorer' };
+const VIEWS = { accueil, explorer: repertoire, financements, indicateurs, methodologie, 'a-propos': apropos, contact };
+const TITLES = { accueil: 'Accueil', explorer: 'Explorer les startups', financements: 'Financements', indicateurs: 'Indicateurs', methodologie: 'Méthodologie', 'a-propos': 'À propos', contact: 'Contact' };
+/* Anciennes adresses : elles ouvrent la page qui contient désormais la section, à la bonne place */
+const ALIASES = { repertoire: ['explorer'], evolutions: ['indicateurs', 'evolutions'], signalements: ['contact', 'signalements'], cookies: ['confidentialite', 'cookies'], 'propriete-intellectuelle': ['cgu', 'licence'] };
 /* Pages légales (assets/legal.js) : des pages de texte, qui ne dépendent pas des données du registre */
-const LEGAL = typeof sgLegal === 'function' ? sgLegal(ext) : {};
+const LEGAL_PARTS = typeof sgLegal === 'function' ? sgLegal(ext) : {};
+/* Une section intégrée dans une autre page : ses titres descendent d'un niveau */
+function sub(html) { return html.replace(/<(\/?)h2>/g, '<$1h3>'); }
+const LEGAL = {};
+if (LEGAL_PARTS['mentions-legales']) {
+  LEGAL['mentions-legales'] = LEGAL_PARTS['mentions-legales'];
+  LEGAL.confidentialite = { title: LEGAL_PARTS.confidentialite.title, html: LEGAL_PARTS.confidentialite.html + `<h2 id="cookies" tabindex="-1">Cookies</h2>${sub(LEGAL_PARTS.cookies.html)}` };
+  LEGAL.cgu = { title: LEGAL_PARTS.cgu.title, html: LEGAL_PARTS.cgu.html + `<h2 id="licence" tabindex="-1">Propriété intellectuelle et licence</h2>${sub(LEGAL_PARTS['propriete-intellectuelle'].html)}<p><a href="data/registre.json">Télécharger les données du registre (JSON)</a></p>` };
+}
 Object.entries(LEGAL).forEach(([k, p]) => {
   TITLES[k] = p.title;
   VIEWS[k] = () => { view.innerHTML = `<article class="prose legal"><h1 tabindex="-1">${p.title}</h1><p class="small mute">Dernière mise à jour : ${SG_LEGAL_UPDATED}</p>${p.html}</article>`; };
@@ -369,17 +379,19 @@ Object.entries(LEGAL).forEach(([k, p]) => {
 let first = true;
 function route() {
   const raw = location.hash.slice(1) || 'accueil';
-  const h = ALIASES[raw] || raw;
+  const [h, anchor] = ALIASES[raw] || [raw];
   const v = h.startsWith('fiche-') ? 'fiche' : (VIEWS[h] ? h : 'accueil');
   document.querySelectorAll('#nav a, .drawer-nav a').forEach(a => {
-    const on = a.dataset.v === v || (v === 'fiche' && a.dataset.v === 'explorer');
+    const on = a.dataset.v === v || (v === 'fiche' && a.dataset.v === 'explorer') || (a.dataset.v === h);
     a.classList.toggle('on', on);
     if (a.dataset.v === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
   if (v === 'fiche') { const s = D.startups.find(x => x.id === h.slice(6)); fiche(h.slice(6)); document.title = (s ? s.nom : 'Fiche introuvable') + ' | StartupGuineeIQ'; }
   else { VIEWS[v](); document.title = v === 'accueil' ? 'StartupGuineeIQ, intelligence de l’écosystème startup guinéen' : TITLES[v] + ' | StartupGuineeIQ'; }
   // Au changement de vue : retour en haut et focus sur le titre, pour le clavier et les lecteurs d'écran
-  if (!first) { window.scrollTo(0, 0); const h1 = view.querySelector('h1'); if (h1) h1.focus({ preventScroll: true }); }
+  const target = anchor && document.getElementById(anchor);
+  if (target) { target.scrollIntoView(); target.focus({ preventScroll: true }); }
+  else if (!first) { window.scrollTo(0, 0); const h1 = view.querySelector('h1'); if (h1) h1.focus({ preventScroll: true }); }
   first = false;
 }
 

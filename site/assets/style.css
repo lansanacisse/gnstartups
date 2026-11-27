@@ -45,7 +45,7 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .stack{display:flex;flex-direction:column;gap:var(--s5)}
 .page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--s4)}
 .intro{color:var(--mute);max-width:68ch;margin-top:var(--s2)}
-.foot{margin-top:var(--s7);padding:var(--s6) 0 var(--s5);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr));gap:var(--s5) var(--s6);font-size:14px;color:var(--ink2)}
+.foot{margin-top:var(--s7);padding:var(--s6) 0 var(--s5);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5) var(--s6);font-size:14px;color:var(--ink2)}
 .foot-brand{font-weight:600;font-size:var(--fs-l);color:var(--ink);letter-spacing:-.03em;margin-bottom:var(--s2)}
 .foot-about p:last-child{max-width:46ch;color:var(--mute)}
 .foot-title{font-size:12px;font-weight:600;color:var(--mute);letter-spacing:0;margin-bottom:var(--s3)}
@@ -53,6 +53,8 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .legend li{display:grid;grid-template-columns:minmax(0,auto);gap:0}
 .legend li>span:last-child{font-size:var(--fs-s);color:var(--mute);padding-left:14px}
 .foot-links{gap:0}.foot-links a{display:inline-flex;align-items:center;min-height:32px}
+.foot-nav{align-self:start;justify-self:end}
+.foot-nav .foot-links{flex-direction:row;flex-wrap:wrap;gap:var(--s1) var(--s4);justify-content:flex-end}
 .foot-meta{grid-column:1/-1;padding-top:var(--s4);border-top:1px solid var(--line);font-size:var(--fs-s);color:var(--mute)}
 
 /* Contrôles */
@@ -100,7 +102,7 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .drawer-nav a span{font-size:var(--fs-s);color:var(--mute)}
 .drawer-nav a.on{background:var(--soft)}
 .drawer-nav a.on b::after{content:" (page actuelle)" / "";font-weight:400;font-size:var(--fs-s);color:var(--mute)}
-.drawer-foot{margin-top:auto;padding:var(--s4) var(--s3) 0;border-top:1px solid var(--line);font-size:15px}
+.drawer-foot{margin-top:auto;padding:var(--s4) var(--s3) 0;border-top:1px solid var(--line);font-size:15px;display:flex;gap:var(--s5)}
 
 /* Panneau de filtres (téléphone) */
 .filter-btn{align-items:center;justify-content:center;gap:var(--s2);background:var(--soft);border:0;border-radius:var(--pill);min-height:44px;padding:0 var(--s4);font-size:15px;font-weight:500;color:var(--ink)}
@@ -198,11 +200,12 @@ td a{display:inline-block;padding-block:2px}
 
 /* Méthodologie */
 .prose{max-width:72ch;display:flex;flex-direction:column;gap:14px;font-size:16px}
-.prose h2{margin-top:var(--s4)}.legal h2{font-size:var(--fs-l)}.prose ol{margin:0;padding-left:22px}.prose ol li{margin-bottom:6px}.prose ul{margin:0;padding-left:20px}.prose li{margin-bottom:6px}
+.prose h2{margin-top:var(--s4)}.prose h3{margin:var(--s2) 0 0;font-size:16px;font-weight:600}.prose h2:focus,.prose section:focus,.stack:focus{outline:none}.legal h2{font-size:var(--fs-l)}.prose ol{margin:0;padding-left:22px}.prose ol li{margin-bottom:6px}.prose ul{margin:0;padding-left:20px}.prose li{margin-bottom:6px}
 dl.defs{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--s2) var(--s4);margin:0}dl.defs dt{font-weight:600}dl.defs dd{margin:0;color:var(--ink2)}
 
 @media(max-width:900px){
-  .foot{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-about{grid-column:1/-1}
+  .foot{grid-template-columns:minmax(0,1fr)}
+  .foot-nav{justify-self:start}.foot-nav .foot-links{justify-content:flex-start}
   .fiche{grid-template-columns:minmax(0,1fr);grid-template-areas:"side" "main"}
   .side{position:static}
 }
@@ -247,6 +250,6 @@ dl.defs{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--s
   .rtable td{display:flow-root;border:0;padding:3px 0 3px 8em;text-align:start}
   .rtable td::before{content:attr(data-l);float:left;width:7.5em;margin-left:-8em;color:var(--mute);font-size:12px;padding-top:2px}
   .rtable td:empty{display:none}
-  .foot{margin-top:var(--s6);grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s5) var(--s4);padding-block:var(--s5) var(--s4)}
+  .foot{margin-top:var(--s6);grid-template-columns:minmax(0,1fr);gap:var(--s4);padding-block:var(--s5) var(--s4)}
   .foot-meta{padding-top:var(--s3)}
 }
