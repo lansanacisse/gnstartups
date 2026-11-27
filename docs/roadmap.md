@@ -1,6 +1,6 @@
 # Roadmap : six mois, la qualité des données avant les fonctionnalités
 
-Positionnement : **référence**. Priorité : **data**. Startup Guinée est un data product ; le site n'est que l'interface de consultation.
+Positionnement : **référence**. Priorité : **data**. StartupGuineeIQ est un data product ; le site n'est que l'interface de consultation.
 
 Le suivi opérationnel (tâches, avancement) se fait dans les [issues et jalons GitHub](https://github.com/lansanacisse/gnstartups/milestones). Ce document fixe le cap.
 
@@ -60,7 +60,7 @@ En V1, le « back-office » est le dépôt lui-même. Cette phase le rend confor
 - [ ] Nom de domaine
 - [ ] Annonce sur @etudiantguineen
 
-**Livrable :** première version publique de Startup Guinée.
+**Livrable :** première version publique de StartupGuineeIQ.
 
 ## Phase 5 : Consolidation (mois 4 à 6, mars à mai 2027)
 

@@ -1,4 +1,4 @@
-/* Startup Guinée : registre public, sobre et factuel.
+/* StartupGuineeIQ : registre public, sobre et factuel.
    Système : une seule police (Inter Tight), une échelle d'espacement, deux rayons (conteneurs 12px, contrôles en pilule),
    des couleurs réservées aux statuts. Le gris de fond ne sert qu'aux éléments qu'on parcourt (fiches du répertoire, panneau de statut). */
 
@@ -34,7 +34,8 @@ h2{margin:0;font-weight:600;letter-spacing:-.03em;font-size:var(--fs-h2);line-he
 .demo{background:var(--warn-bg);color:var(--warn);font-size:var(--fs-s);text-align:center;padding:var(--s2) var(--s4)}
 .top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s4);padding-block:var(--s4)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-height:44px}
-.brand b{font-weight:500;font-size:22px;letter-spacing:-.04em}.brand span{font-size:var(--fs-s);color:var(--mute)}
+.brand b{font-weight:500;font-size:22px;letter-spacing:-.04em}
+.iq{font-weight:700;letter-spacing:0;margin-left:1px}.brand>span{font-size:var(--fs-s);color:var(--mute)}
 main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .stack{display:flex;flex-direction:column;gap:var(--s5)}
 .page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--s4)}
@@ -190,7 +191,7 @@ dl.defs{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:var(--s
   .wrap{padding:0 var(--s4)}
   .demo{padding:6px var(--s4);font-size:12px}
   .top{padding-block:var(--s2)}
-  .brand span{display:none}
+  .brand>span{display:none}
   .tabs{display:none}
   .top{justify-content:space-between;flex-wrap:nowrap;gap:var(--s2)}
   .brand b{font-size:20px}

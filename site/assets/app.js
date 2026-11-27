@@ -1,4 +1,4 @@
-/* Startup Guinée : site statique alimenté par data/registre.json (généré par scripts/build.py). */
+/* StartupGuineeIQ : site statique alimenté par data/registre.json (généré par scripts/build.py). */
 {
 const REPO = 'lansanacisse/gnstartups';
 const ISSUE = (template, title, body) => `https://github.com/${REPO}/issues/new?template=${template}&title=${encodeURIComponent(title)}${body ? '&body=' + encodeURIComponent(body) : ''}`;
@@ -260,7 +260,7 @@ function methodologie() {
   const gh = p => `https://github.com/${REPO}/blob/main/${p}`;
   view.innerHTML = `<article class="prose">
   <h1 tabindex="-1">Méthodologie</h1>
-  <p>Startup Guinée est un registre indépendant des startups créées en Guinée ou qui développent leur activité sur le marché guinéen. L’objectif n’est pas d’en recenser le plus possible, mais de tenir la base la plus fiable possible.</p>
+  <p>StartupGuineeIQ est un registre indépendant des startups créées en Guinée ou qui développent leur activité sur le marché guinéen. L’objectif n’est pas d’en recenser le plus possible, mais de tenir la base la plus fiable possible.</p>
   <h2>Ce que nous recensons</h2>
   <p>Une startup est une entreprise qui a une activité innovante identifiable et une ambition de croissance reproductible. Les PME traditionnelles, associations, ONG et projets étudiants n’en font pas partie. Les projets sans activité identifiable sont classés à part, comme projets précoces.</p>
   <h2>Nos règles</h2>
@@ -291,8 +291,8 @@ function route() {
     a.classList.toggle('on', on);
     if (a.dataset.v === v) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
-  if (v === 'fiche') { const s = D.startups.find(x => x.id === h.slice(6)); fiche(h.slice(6)); document.title = (s ? s.nom : 'Fiche introuvable') + ' | Startup Guinée'; }
-  else { VIEWS[v](); document.title = TITLES[v] + ' | Startup Guinée'; }
+  if (v === 'fiche') { const s = D.startups.find(x => x.id === h.slice(6)); fiche(h.slice(6)); document.title = (s ? s.nom : 'Fiche introuvable') + ' | StartupGuineeIQ'; }
+  else { VIEWS[v](); document.title = TITLES[v] + ' | StartupGuineeIQ'; }
   // Au changement de vue : retour en haut et focus sur le titre, pour le clavier et les lecteurs d'écran
   if (!first) { window.scrollTo(0, 0); const h1 = view.querySelector('h1'); if (h1) h1.focus({ preventScroll: true }); }
   first = false;
