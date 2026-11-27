@@ -35,7 +35,7 @@ h2{margin:0;font-weight:600;letter-spacing:-.03em;font-size:var(--fs-h2);line-he
 .top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s4);padding-block:var(--s4)}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-height:44px}
 .brand b{font-weight:500;font-size:22px;letter-spacing:-.04em}
-.iq{font-weight:700;letter-spacing:0;margin-left:1px}.brand>span{font-size:var(--fs-s);color:var(--mute)}
+.brand>span{font-size:var(--fs-s);color:var(--mute)}
 main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .stack{display:flex;flex-direction:column;gap:var(--s5)}
 .page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--s4)}
