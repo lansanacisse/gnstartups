@@ -86,7 +86,6 @@ function repertoire() {
   const S = D.startups;
   const opt = (arr, v, all) => `<option value="">${all}</option>` + arr.map(x => `<option value="${esc(x.id)}"${x.id === v ? ' selected' : ''}>${esc(x.libelle || x.nom)}</option>`).join('');
   const usedS = D.secteurs.filter(x => S.some(s => s.secteur_id === x.id));
-  const n = k => S.filter(s => matchStatut(s, k)).length;
   view.innerHTML = `<div class="stack">
   <div class="page-head"><div><h1 tabindex="-1">Répertoire des startups guinéennes</h1>
    <p class="intro">Chaque fiche indique le statut d’activité, la preuve qui le justifie et la date de la dernière vérification.</p></div>
@@ -94,7 +93,7 @@ function repertoire() {
   <div class="filters" role="search">
    <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Rechercher" value="${esc(st.q)}" autocomplete="off"></label>
    <label class="field wide-flex"><span class="label">Secteur</span><select id="secteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
-   <div class="seg wide-flex" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${n(x[0])}</span></button>`).join('')}</div>
+   <div class="seg wide-flex" role="group" aria-label="Filtrer par statut">${STATUTS.map(x => `<button type="button" data-statut="${x[0]}" aria-pressed="false">${x[1]}</button>`).join('')}</div>
    ${FILTER_BTN}
   </div>
   <div class="toolbar">
@@ -102,7 +101,7 @@ function repertoire() {
   <ul class="entries" id="list"></ul><p class="empty" id="empty" hidden>Aucune startup ne correspond à ces filtres.</p>
   <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
    <div class="sheet-head"><h2 id="fs-title">Filtrer les startups</h2><button type="button" class="linkbtn" data-close-sheet>Fermer</button></div>
-   <label class="sheet-field"><span>Situation</span><span class="field"><select id="mstatut" data-k="statut">${STATUTS.map(x => `<option value="${x[0]}"${st.statut === x[0] ? ' selected' : ''}>${x[1]} (${n(x[0])})</option>`).join('')}</select>${chev}</span></label>
+   <label class="sheet-field"><span>Situation</span><span class="field"><select id="mstatut" data-k="statut">${STATUTS.map(x => `<option value="${x[0]}"${st.statut === x[0] ? ' selected' : ''}>${x[1]}</option>`).join('')}</select>${chev}</span></label>
    <label class="sheet-field"><span>Secteur</span><span class="field"><select id="msecteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</span></label>
    <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
   </dialog></div>`;
@@ -183,21 +182,19 @@ function financements() {
   const tot = done.reduce((a, r) => a + (r.montant_usd || 0), 0);
   const known = done.filter(r => r.montant != null).length;
   const types = [...new Set(R.map(r => r.type_financement))];
-  const nt = t => R.filter(r => r.type_financement === t).length;
-  const ne = e => R.filter(r => !e || r.statut === e).length;
   view.innerHTML = `<div class="stack">
   <div><h1 tabindex="-1">Financements documentés</h1><p class="intro">Investissements, subventions, prix et dette, chacun avec sa source. Les montants sont affichés dans leur devise d’origine ; les totaux utilisent la contre-valeur en dollars.</p></div>
   <p class="summary">Montant total documenté : <b>${usd(tot)}</b>${known < done.length ? ` (${done.length - known} opération${done.length - known > 1 ? 's' : ''} sans montant connu)` : ''}.</p>
   <div class="toolbar with-btn">
    <div class="filters wide-flex">
-    <label class="field"><span class="label">Type</span><select id="ftype" data-k="ftype"><option value="">Tous les types (${R.length})</option>${types.map(t => `<option value="${esc(t)}">${esc(lab('type_financement', t))} (${nt(t)})</option>`).join('')}</select>${chev}</label>
-    <div class="seg" role="group" aria-label="Filtrer par état">${ETATS.map(x => `<button type="button" data-fetat="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${ne(x[0])}</span></button>`).join('')}</div>
+    <label class="field"><span class="label">Type</span><select id="ftype" data-k="ftype"><option value="">Tous les types</option>${types.map(t => `<option value="${esc(t)}">${esc(lab('type_financement', t))}</option>`).join('')}</select>${chev}</label>
+    <div class="seg" role="group" aria-label="Filtrer par état">${ETATS.map(x => `<button type="button" data-fetat="${x[0]}" aria-pressed="false">${x[1]}</button>`).join('')}</div>
    </div>
    <div class="result"><span id="frc" aria-live="polite"></span><button type="button" id="freset" class="linkbtn">Réinitialiser</button></div>${FILTER_BTN}</div>
   <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
    <div class="sheet-head"><h2 id="fs-title">Filtrer les financements</h2><button type="button" class="linkbtn" data-close-sheet>Fermer</button></div>
-   <label class="sheet-field"><span>État</span><span class="field"><select id="mfetat" data-k="fetat">${ETATS.map(x => `<option value="${x[0]}">${x[1]} (${ne(x[0])})</option>`).join('')}</select>${chev}</span></label>
-   <label class="sheet-field"><span>Type</span><span class="field"><select id="mftype" data-k="ftype"><option value="">Tous les types (${R.length})</option>${types.map(t => `<option value="${esc(t)}">${esc(lab('type_financement', t))} (${nt(t)})</option>`).join('')}</select>${chev}</span></label>
+   <label class="sheet-field"><span>État</span><span class="field"><select id="mfetat" data-k="fetat">${ETATS.map(x => `<option value="${x[0]}">${x[1]}</option>`).join('')}</select>${chev}</span></label>
+   <label class="sheet-field"><span>Type</span><span class="field"><select id="mftype" data-k="ftype"><option value="">Tous les types</option>${types.map(t => `<option value="${esc(t)}">${esc(lab('type_financement', t))}</option>`).join('')}</select>${chev}</span></label>
    <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
   </dialog>
   <div class="scroll"><table class="rtable"><caption class="sr">Opérations de financement, de la plus récente à la plus ancienne</caption>
