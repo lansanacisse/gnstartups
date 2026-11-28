@@ -88,7 +88,7 @@ function repertoire() {
   const usedS = D.secteurs.filter(x => S.some(s => s.secteur_id === x.id));
   view.innerHTML = `<div class="stack">
   <div class="page-head"><div><h1 tabindex="-1">Répertoire des startups guinéennes</h1>
-   <p class="intro">Chaque fiche indique le statut d’activité, la preuve qui le justifie et la date de la dernière vérification.</p></div>
+   <p class="intro">Un répertoire structuré pour découvrir les startups, consulter leurs informations, vérifier leur activité et suivre leur évolution.</p></div>
    </div>
   <div class="filters" role="search">
    <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Rechercher" value="${esc(st.q)}" autocomplete="off"></label>
