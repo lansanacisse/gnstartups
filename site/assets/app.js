@@ -387,7 +387,6 @@ matchMedia('(min-width: 601px)').addEventListener('change', e => { if (e.matches
 fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('erreur ' + r.status); return r.json(); }).then(data => {
   D = data;
   document.getElementById('demo').hidden = !D.contient_demo;
-  document.getElementById('meta').textContent = `Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}.`;
   route();
 }).catch(err => {
   view.innerHTML = `<div class="stack"><h1>Le registre n’a pas pu être chargé</h1><p>${esc(err.message)}. Réessayez dans quelques instants. En local, lancez <code>python -m http.server -d site</code> après <code>python scripts/build.py</code>.</p></div>`;
