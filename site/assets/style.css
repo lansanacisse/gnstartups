@@ -49,7 +49,6 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 .foot{margin-top:var(--s7);padding:var(--s6) 0 var(--s5);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s5) var(--s6);font-size:14px;color:var(--ink2)}
 .foot-brand{font-weight:600;font-size:var(--fs-l);color:var(--ink);letter-spacing:-.03em;margin-bottom:var(--s2)}
 .foot-about p:last-child{max-width:46ch;color:var(--mute)}
-.foot-title{font-size:12px;font-weight:600;color:var(--mute);letter-spacing:0;margin-bottom:var(--s3)}
 .legend,.foot-links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
 .legend li{display:grid;grid-template-columns:minmax(0,auto);gap:0}
 .legend li>span:last-child{font-size:var(--fs-s);color:var(--mute);padding-left:14px}
@@ -123,7 +122,6 @@ main{padding-block:var(--s5) var(--s7);min-height:60vh}
 
 /* Accueil */
 .section-head a{font-size:14px}
-.entries.compact{grid-template-columns:minmax(0,1fr)}
 
 /* Répertoire */
 .entries{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3);grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
