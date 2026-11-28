@@ -3,8 +3,10 @@
 const SG_CONTACT = '';
 const SG_LEGAL_UPDATED = '27 novembre 2026';
 
+const SG_MAIL = SG_CONTACT ? `<a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a>` : 'l’adresse indiquée sur la page <a href="#contact">Contact</a>';
+
 function sgLegal(ext) {
-  const mail = SG_CONTACT ? `<a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a>` : 'l’adresse de contact du projet (en cours de création, voir la page <a href="#contact">Contact</a>)';
+  const mail = SG_MAIL;
   const link = (hash, text) => `<a href="#${hash}">${text}</a>`;
   return {
     'mentions-legales': {
@@ -74,10 +76,9 @@ function sgLegal(ext) {
   <h2>Accès</h2>
   <p>Le site est accessible gratuitement, sans inscription. L’éditeur peut le modifier, le suspendre ou l’interrompre à tout moment, notamment pour maintenance.</p>
   <h2>Nature des informations</h2>
-  <p>Les informations sont collectées et vérifiées selon une ${link('methodologie', 'méthodologie publique')}. Chaque statut est daté et sourcé, mais une information peut être incomplète, dépassée ou erronée. Elles sont fournies à titre informatif : elles ne constituent ni un conseil en investissement, ni une évaluation des entreprises, ni une recommandation.</p>
-  <p>Le site ne vend aucun produit ni service : il n’y a donc pas de conditions générales de vente.</p>
+  <p>Chaque statut est daté et sourcé (voir la ${link('methodologie', 'méthodologie')}), mais une information peut être incomplète, dépassée ou erronée. Elles sont fournies à titre informatif : elles ne constituent ni un conseil en investissement, ni une évaluation des entreprises, ni une recommandation.</p>
   <h2>Contributions</h2>
-  <p>Chacun peut proposer une startup, signaler une erreur ou revendiquer une fiche. En contribuant, vous garantissez que les informations transmises sont exactes et que vous avez le droit de les communiquer, et vous acceptez qu’elles soient publiées, après vérification, sous la licence du registre (voir la ${link('propriete-intellectuelle', 'politique de propriété intellectuelle')}). Une contribution n’est jamais publiée sans vérification, et les entreprises ne modifient pas directement leur fiche.</p>
+  <p>Chacun peut proposer une startup, signaler une erreur ou revendiquer une fiche. En contribuant, vous garantissez que les informations transmises sont exactes et que vous avez le droit de les communiquer, et vous acceptez qu’elles soient publiées, après vérification, sous la licence du registre (voir ${link('licence', 'Propriété intellectuelle et licence')} plus bas). Une contribution n’est jamais publiée sans vérification.</p>
   <h2>Utilisations interdites</h2>
   <ul>
    <li>Utiliser les informations du site pour harceler, démarcher abusivement ou porter atteinte aux personnes citées.</li>
@@ -86,7 +87,7 @@ function sgLegal(ext) {
    <li>Transmettre de fausses informations ou des signalements délibérément infondés.</li>
   </ul>
   <h2>Responsabilité</h2>
-  <p>L’éditeur s’efforce d’assurer l’exactitude des informations publiées et corrige les erreurs signalées selon la ${link('signalements', 'politique de gestion des signalements')}. Il ne peut être tenu responsable des décisions prises sur la base de ces informations, ni du contenu des sites vers lesquels le registre renvoie.</p>
+  <p>L’éditeur s’efforce d’assurer l’exactitude des informations publiées et corrige les erreurs signalées selon la ${link('signalements', 'gestion des signalements')}. Il ne peut être tenu responsable des décisions prises sur la base de ces informations, ni du contenu des sites vers lesquels le registre renvoie.</p>
   <h2>Modification des conditions</h2>
   <p>Ces conditions peuvent évoluer. La date de dernière mise à jour figure en haut de la page.</p>
   <h2>Droit applicable</h2>
@@ -108,27 +109,14 @@ function sgLegal(ext) {
    <li><b>Code du site</b> : il n’est pas publié sous licence ouverte.</li>
   </ul>
   <h2>Signaler une atteinte</h2>
-  <p>Si vous estimez qu’un contenu du site porte atteinte à vos droits, écrivez à ${mail} en précisant le contenu concerné et vos droits. Il sera examiné selon la ${link('signalements', 'politique de gestion des signalements')}.</p>`
+  <p>Si vous estimez qu’un contenu du site porte atteinte à vos droits, écrivez à ${mail} en précisant le contenu concerné et vos droits. Il sera examiné selon la ${link('signalements', 'gestion des signalements')}.</p>`
     },
 
     signalements: {
       title: 'Politique de gestion des signalements',
       html: `
-  <p>Un registre de référence doit pouvoir être corrigé. Cette page explique comment signaler un problème et comment il est traité.</p>
-  <h2>Ce que vous pouvez signaler</h2>
-  <ul>
-   <li>Une information inexacte ou dépassée sur une fiche.</li>
-   <li>Une startup absente du registre.</li>
-   <li>Une fiche que vous souhaitez revendiquer en tant que fondateur ou dirigeant.</li>
-   <li>Une demande de retrait de vos informations personnelles.</li>
-   <li>Un contenu que vous estimez illicite ou portant atteinte à vos droits.</li>
-  </ul>
-  <h2>Comment signaler</h2>
-  <ul>
-   <li><b>Corrections, nouvelles startups, revendications</b> : utilisez les boutons du site, qui ouvrent un formulaire sur GitHub. Ces formulaires sont <b>publics</b>.</li>
-   <li><b>Données personnelles, contenu illicite ou information confidentielle</b> : écrivez à ${mail}. Ces signalements ne sont pas publiés.</li>
-  </ul>
-  <p>Indiquez la fiche concernée, l’information en cause, la correction proposée et une source qui la justifie. Pour un contenu illicite, précisez aussi l’emplacement exact (lien), les raisons pour lesquelles il vous paraît illicite et vos coordonnées.</p>
+  <p>Pour des données personnelles, un contenu illicite ou une information confidentielle, écrivez à ${mail} : ces signalements ne sont pas publiés.</p>
+  <p>Dans tous les cas, indiquez la fiche concernée, l’information en cause, la correction proposée et une source qui la justifie. Pour un contenu illicite, précisez aussi l’emplacement exact (lien), les raisons pour lesquelles il vous paraît illicite et vos coordonnées.</p>
   <h2>Traitement</h2>
   <ol>
    <li><b>Accusé de réception</b> sous 7 jours.</li>

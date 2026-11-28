@@ -27,6 +27,9 @@ const fdate = d => { if (!d) return ''; const p = d.split('-'); return parseInt(
 const usd = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '').replace('.', ',') + ' M$' : Math.round(n / 1000) + ' k$';
 const money = (m, dev) => m == null ? '<span class="undisclosed">Non divulgué</span>' : dev === 'USD' ? usd(m) : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(m) + ' ' + esc(dev);
 const pct = v => v == null ? '–' : String(v).replace('.', ',') + ' %';
+/* Comment une vérification a été faite : « Vérifiée en ligne le… », « Vérification en ligne » */
+const VERIF_HOW = { entretien: 'par entretien', verification_en_ligne: 'en ligne', registre: 'au registre officiel', tiers: 'par un tiers', visite: 'lors d’une visite sur place' };
+const VERIF_TITLE = { entretien: 'Vérification par entretien', verification_en_ligne: 'Vérification en ligne', registre: 'Vérification au registre officiel', tiers: 'Confirmation par un tiers', visite: 'Visite sur place' };
 const status = s => `<span class="status st-${esc(s)}">${esc(lab('statut_activite', s))}</span>`;
 const flag = (text, cls) => `<span class="flag ${cls}">${esc(text)}</span>`;
 const kind = r => esc(lab('type_financement', r.type_financement)) + (lab('tour', r.tour) ? ', ' + esc(lab('tour', r.tour)) : '');
@@ -35,7 +38,8 @@ const chev = '<svg class="chev" aria-hidden="true" width="14" height="14" viewBo
 const searchIco = '<svg class="ico" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
 
 let D = null;
-const st = { q: '', secteur: '', statut: 'tous', ftype: '' };
+const st = { q: '', secteur: '', statut: 'tous', ftype: '', fetat: '' };
+const ETATS = [['', 'Toutes'], ['documente', 'Réalisées'], ['en_cours_declare', 'En cours']];
 const view = document.getElementById('view');
 
 /* Exceptions à signaler sur une fiche : le statut principal est affiché à part */
@@ -86,7 +90,7 @@ function repertoire() {
   view.innerHTML = `<div class="stack">
   <div class="page-head"><div><h1 tabindex="-1">Répertoire des startups guinéennes</h1>
    <p class="intro">Chaque fiche indique le statut d’activité, la preuve qui le justifie et la date de la dernière vérification.</p></div>
-   <span class="wide">${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup', 'btn')}</span></div>
+   </div>
   <div class="filters" role="search">
    <label class="field grow">${searchIco}<span class="sr">Rechercher par nom, activité ou fondateur</span><input id="q" type="search" placeholder="Rechercher" value="${esc(st.q)}" autocomplete="off"></label>
    <label class="field wide-flex"><span class="label">Secteur</span><select id="secteur" data-k="secteur">${opt(usedS, st.secteur, 'Tous les secteurs')}</select>${chev}</label>
@@ -140,7 +144,7 @@ function fiche(id) {
   if (!links.length) missing.unshift('site web et réseaux sociaux');
   // Un événement « vérification » le même jour qu'une ligne de vérification fait doublon : on garde la vérification
   const vDates = new Set(s.verifications.map(v => v.date));
-  const hist = [...s.verifications.map(v => ({ date: v.date, html: `<p><b>Vérification par ${esc(lab('methode_verification', v.methode))}</b></p><p>${esc(v.resume)}</p><p class="small mute">Statut constaté : ${esc(lab('statut_activite', v.statut_constate))}</p>${srcLine(v.sources)}` })),
+  const hist = [...s.verifications.filter(v => v !== last).map(v => ({ date: v.date, html: `<p><b>${esc(VERIF_TITLE[v.methode] || 'Vérification')}</b></p><p>${esc(v.resume)}</p><p class="small mute">Statut constaté : ${esc(lab('statut_activite', v.statut_constate))}</p>${srcLine(v.sources)}` })),
     ...s.evenements.filter(e => !(e.champ === 'statut_verification' && vDates.has(e.date))).map(e => ({ date: e.date, html: `<p><b>${esc(lab('champ', e.champ))}</b></p><p>${esc(e.motif)}</p>${srcLine(e.sources)}` }))]
     .sort((a, b) => a.date < b.date ? 1 : -1);
   const body = `Fiche : ${s.nom} (${location.origin}${location.pathname}#fiche-${s.id})\n\nInformation à corriger :\n\nValeur correcte :\n\nSource (lien ou explication) :\n`;
@@ -151,7 +155,7 @@ function fiche(id) {
   <div class="fiche">
    <aside class="side" aria-label="Statut et vérification">
     <div class="panel">${status(s.statut_activite)}${flags(s)}
-     ${last ? `<p>${esc(last.resume)}</p><p class="small mute">Vérifiée le ${fdate(last.date)}, par ${esc(lab('methode_verification', last.methode))}.</p>` : '<p class="mute">Cette fiche n’a pas encore été vérifiée.</p>'}
+     ${last ? `<p>${esc(last.resume)}</p><p class="small mute">Vérifiée ${esc(VERIF_HOW[last.methode] || '')} le ${fdate(last.date)}.</p>` : '<p class="mute">Cette fiche n’a pas encore été vérifiée.</p>'}
      ${s.a_actualiser ? '<p class="small">La dernière vérification date de plus de 6 mois : la fiche est à actualiser.</p>' : ''}
      <dl class="kv"><dt>Niveau de confiance</dt><dd>${esc(lab('niveau_confiance', s.niveau_confiance))}</dd></dl>
      <div><dl class="kv"><dt>Complétude</dt><dd>${pct(s.completude)}</dd></dl><div class="meter" aria-hidden="true"><i style="width:${Number(s.completude) || 0}%"></i></div></div>
@@ -168,7 +172,7 @@ function fiche(id) {
     <section class="section"><div class="section-head"><h2>Financements</h2><span class="small mute">${esc(lab('statut_financement', s.statut_financement))}</span></div>
      ${s.financements.length ? `<ul class="rows">${s.financements.map(r => `<li><div><p><b>${kind(r)}</b>, ${fdate(r.date)}${r.statut === 'en_cours_declare' ? ' ' + flag('En cours', 'fl-info') : ''}</p><p class="small mute">${esc(r.investisseurs.join(', ') || 'Financeurs non communiqués')}</p>${r.notes ? `<p class="small">${esc(r.notes)}</p>` : ''}${srcLine(r.sources)}</div><span class="amount">${money(r.montant, r.devise)}</span></li>`).join('')}</ul>` : '<p class="mute">Aucune levée connue. Cela ne signifie pas que l’entreprise n’a jamais levé de fonds.</p>'}</section>
     ${s.accompagnements.length ? `<section class="section"><h2>Accompagnement</h2><ul class="rows">${s.accompagnements.map(a => `<li><div><p><b>${esc(a.organisation)}</b>${a.programme ? ', ' + esc(a.programme) : ''}${a.annee ? ' (' + a.annee + ')' : ''}</p>${srcLine(a.sources)}</div></li>`).join('')}</ul></section>` : ''}
-    <section class="section"><h2>Historique</h2>${hist.length ? `<ol class="tl">${hist.map(h => `<li><p class="when">${fdate(h.date)}</p>${h.html}</li>`).join('')}</ol>` : '<p class="mute">Aucun événement enregistré.</p>'}</section>
+    <section class="section"><h2>Historique</h2>${hist.length ? `<ol class="tl">${hist.map(h => `<li><p class="when">${fdate(h.date)}</p>${h.html}</li>`).join('')}</ol>` : '<p class="mute">Aucun autre événement enregistré.</p>'}</section>
    </div></div></div>`;
 }
 
@@ -178,38 +182,40 @@ function financements() {
   const done = R.filter(r => r.statut === 'documente');
   const tot = done.reduce((a, r) => a + (r.montant_usd || 0), 0);
   const known = done.filter(r => r.montant != null).length;
-  const pending = R.filter(r => r.statut === 'en_cours_declare').length;
   const types = [...new Set(R.map(r => r.type_financement))];
   const nt = t => R.filter(r => r.type_financement === t).length;
+  const ne = e => R.filter(r => !e || r.statut === e).length;
   view.innerHTML = `<div class="stack">
   <div><h1 tabindex="-1">Financements documentés</h1><p class="intro">Investissements, subventions, prix et dette, chacun avec sa source. Les montants sont affichés dans leur devise d’origine ; les totaux utilisent la contre-valeur en dollars.</p></div>
-  <p class="summary"><b>${usd(tot)}</b> documentés sur <b>${done.length}</b> opération${done.length > 1 ? 's' : ''}${known < done.length ? `, dont ${known} avec un montant connu` : ''}. <b>${pending}</b> levée${pending > 1 ? 's' : ''} en cours déclarée${pending > 1 ? 's' : ''}.</p>
-  <div class="toolbar with-btn"><div class="seg wide-flex" role="group" aria-label="Filtrer par type de financement"><button type="button" data-ftype="" aria-pressed="false">Tous <span class="count">${R.length}</span></button>${types.map(t => `<button type="button" data-ftype="${esc(t)}" aria-pressed="false">${esc(lab('type_financement', t))} <span class="count">${nt(t)}</span></button>`).join('')}</div>
+  <p class="summary">Montant total documenté : <b>${usd(tot)}</b>${known < done.length ? ` (${done.length - known} opération${done.length - known > 1 ? 's' : ''} sans montant connu)` : ''}.</p>
+  <div class="toolbar with-btn">
+   <div class="filters wide-flex">
+    <label class="field"><span class="label">Type</span><select id="ftype" data-k="ftype"><option value="">Tous les types (${R.length})</option>${types.map(t => `<option value="${esc(t)}">${esc(lab('type_financement', t))} (${nt(t)})</option>`).join('')}</select>${chev}</label>
+    <div class="seg" role="group" aria-label="Filtrer par état">${ETATS.map(x => `<button type="button" data-fetat="${x[0]}" aria-pressed="false">${x[1]} <span class="count">${ne(x[0])}</span></button>`).join('')}</div>
+   </div>
    <div class="result"><span id="frc" aria-live="polite"></span><button type="button" id="freset" class="linkbtn">Réinitialiser</button></div>${FILTER_BTN}</div>
   <dialog id="fsheet" class="sheet" aria-labelledby="fs-title">
    <div class="sheet-head"><h2 id="fs-title">Filtrer les financements</h2><button type="button" class="linkbtn" data-close-sheet>Fermer</button></div>
-   <fieldset class="opts"><legend>Type de financement</legend>
-    <label class="opt"><input type="radio" name="mftype" value=""${!st.ftype ? ' checked' : ''}><span>Tous</span><span class="count">${R.length}</span></label>
-    ${types.map(t => `<label class="opt"><input type="radio" name="mftype" value="${esc(t)}"${st.ftype === t ? ' checked' : ''}><span>${esc(lab('type_financement', t))}</span><span class="count">${nt(t)}</span></label>`).join('')}
-   </fieldset>
+   <label class="sheet-field"><span>État</span><span class="field"><select id="mfetat" data-k="fetat">${ETATS.map(x => `<option value="${x[0]}">${x[1]} (${ne(x[0])})</option>`).join('')}</select>${chev}</span></label>
+   <label class="sheet-field"><span>Type</span><span class="field"><select id="mftype" data-k="ftype"><option value="">Tous les types (${R.length})</option>${types.map(t => `<option value="${esc(t)}">${esc(lab('type_financement', t))} (${nt(t)})</option>`).join('')}</select>${chev}</span></label>
    <div class="sheet-foot"><button type="button" class="btn" id="mreset">Réinitialiser</button><button type="button" class="btn primary" id="mshow" data-close-sheet></button></div>
   </dialog>
   <div class="scroll"><table class="rtable"><caption class="sr">Opérations de financement, de la plus récente à la plus ancienne</caption>
   <thead><tr><th scope="col">Date</th><th scope="col">Startup</th><th scope="col">Type</th><th scope="col" class="num">Montant</th><th scope="col">Financeurs</th><th scope="col">Source</th></tr></thead><tbody id="rounds"></tbody></table></div></div>`;
-  view.querySelectorAll('input[name=mftype]').forEach(r => r.addEventListener('change', e => { st.ftype = e.target.value; rounds(); }));
-  document.getElementById('mreset').addEventListener('click', () => { st.ftype = ''; rounds(); });
+  view.querySelectorAll('select[data-k]').forEach(sel => sel.addEventListener('change', e => { st[e.target.dataset.k] = e.target.value; rounds(); }));
+  document.getElementById('mreset').addEventListener('click', () => { st.ftype = ''; st.fetat = ''; rounds(); });
   bindSheet();
   rounds();
 }
 function rounds() {
-  const R = D.financements, f = R.filter(r => !st.ftype || r.type_financement === st.ftype);
-  document.querySelectorAll('[data-ftype]').forEach(b => { const on = b.dataset.ftype === st.ftype; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-  document.querySelectorAll('input[name=mftype]').forEach(r => { r.checked = r.value === st.ftype; });
+  const R = D.financements, f = R.filter(r => (!st.ftype || r.type_financement === st.ftype) && (!st.fetat || r.statut === st.fetat));
+  document.querySelectorAll('[data-fetat]').forEach(b => { const on = b.dataset.fetat === st.fetat; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  syncControls();
   const label = n => n + ' opération' + (n > 1 ? 's' : '');
   document.getElementById('frc').textContent = `${label(f.length)} sur ${R.length}`;
-  document.getElementById('freset').hidden = !st.ftype;
+  document.getElementById('freset').hidden = !(st.ftype || st.fetat);
   document.getElementById('mshow').textContent = f.length ? `Voir ${label(f.length)}` : 'Aucune opération';
-  setFilterCount(st.ftype ? 1 : 0);
+  setFilterCount(!!st.ftype + !!st.fetat);
   document.getElementById('rounds').innerHTML = f.map(r => `<tr>
    <td data-l="Date" class="nowrap mute">${fdate(r.date)}</td><td data-l="Startup"><a href="#fiche-${esc(r.startup_id)}"><b>${esc(r.startup)}</b></a></td>
    <td data-l="Type">${kind(r)}${r.statut === 'en_cours_declare' ? ' ' + flag('En cours', 'fl-info') : ''}</td><td data-l="Montant" class="num"><b>${money(r.montant, r.devise)}</b></td>
@@ -258,7 +264,7 @@ function methodologie() {
   const gh = p => `https://github.com/${REPO}/blob/main/${p}`;
   view.innerHTML = `<article class="prose">
   <h1 tabindex="-1">Méthodologie</h1>
-  <p>StartupGuineeIQ est un registre indépendant des startups créées en Guinée ou qui développent leur activité sur le marché guinéen. L’objectif n’est pas d’en recenser le plus possible, mais de tenir la base la plus fiable possible.</p>
+  <p>Comment les startups sont choisies, comment chaque information est vérifiée et ce que signifie chaque statut.</p>
   <h2>Ce que nous recensons</h2>
   <p>Une startup est une entreprise qui a une activité innovante identifiable et une ambition de croissance reproductible. Les PME traditionnelles, associations, ONG et projets étudiants n’en font pas partie. Les projets sans activité identifiable sont classés à part, comme projets précoces.</p>
   <h2>Nos règles</h2>
@@ -273,7 +279,7 @@ function methodologie() {
   <h2>Types de financement</h2>${defs('type_financement')}
   <p class="small mute">« Aucune levée connue » ne veut pas dire que l’entreprise n’a jamais levé de fonds. Aucun montant n’est publié sans source.</p>
   <h2>Contribuer</h2>
-  <p>Vous pouvez ${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'proposer une startup')} ou signaler une correction depuis chaque fiche. Toute contribution est vérifiée avant publication.</p>
+  <p>Pour corriger ou compléter le registre, passez par la page <a href="#contact">Contact</a>. Toute contribution est vérifiée avant publication.</p>
   <p class="small">Documents de référence : ${ext(gh('docs/protocole-verification.md'), 'protocole de vérification')}, ${ext(gh('docs/dictionnaire-donnees.md'), 'dictionnaire de données')}, ${ext(gh('docs/definition-startup.md'), 'définition d’une startup')}.</p>
   </article>`;
 }
@@ -286,7 +292,7 @@ function apropos() {
   <h2>Pourquoi ce registre</h2>
   <p>Les informations sur les startups guinéennes sont dispersées : articles, réseaux sociaux, listes de concours, pages d’incubateurs. Elles sont rarement datées et presque jamais vérifiées. Une startup qui ne publie plus n’est pas forcément fermée, et une levée annoncée n’est pas toujours réalisée. Le registre distingue ces situations, preuve à l’appui.</p>
   <h2>Ce que nous faisons</h2>
-  <ul><li>Recenser les startups identifiables, sans prétendre couvrir tout l’écosystème.</li>
+  <ul><li>Recenser les startups guinéennes identifiables.</li>
   <li>Vérifier les informations essentielles et dater chaque vérification.</li>
   <li>Citer la source de chaque information importante.</li>
   <li>Publier des ${'<a href="#indicateurs">indicateurs</a>'} calculés à partir du registre.</li></ul>
@@ -315,13 +321,12 @@ function contact() {
   <h2>Écrire à l’équipe</h2>
   ${write}
   <h2>Corriger ou compléter le registre</h2>
-  <p>Ces demandes passent par des formulaires publics sur GitHub, pour garder une trace de chaque modification :</p>
+  <p>Ces demandes passent par des formulaires sur GitHub, pour garder une trace de chaque modification. Ils sont <b>publics</b> : n’y indiquez aucune information personnelle.</p>
   <ul><li>${ext(ISSUE('nouvelle-startup.yml', 'Nouvelle startup : '), 'Proposer une startup')}</li>
   <li>${ext(ISSUE('correction.yml', 'Correction : '), 'Signaler une information incorrecte')}</li>
   <li>${ext(ISSUE('revendication.yml', 'Revendication de fiche : '), 'Revendiquer la fiche de votre startup')}</li></ul>
-  <p class="small mute">Ces formulaires sont visibles par tous : n’y indiquez aucune information personnelle.</p>
   <h2 id="signalements" tabindex="-1">Gestion des signalements</h2>
-  ${LEGAL_PARTS.signalements ? sub(LEGAL_PARTS.signalements.html) : ''}
+  ${LEGAL_PARTS.signalements ? sub(LEGAL_PARTS.signalements.html).split('écrivez à ' + SG_MAIL).join(hasMail ? 'écrivez à l’adresse ci-dessus' : 'utilisez la demande confidentielle décrite plus haut') : ''}
   </article>`;
 }
 
@@ -365,8 +370,8 @@ function route() {
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.statut !== undefined) { st.statut = b.dataset.statut; list(); }
-  else if (b.dataset.ftype !== undefined) { st.ftype = b.dataset.ftype; rounds(); }
-  else if (b.id === 'freset') { st.ftype = ''; rounds(); }
+  else if (b.dataset.fetat !== undefined) { st.fetat = b.dataset.fetat; rounds(); }
+  else if (b.id === 'freset') { st.ftype = ''; st.fetat = ''; rounds(); }
   else if (b.id === 'reset') {
     Object.assign(st, { q: '', secteur: '', statut: 'tous' });
     syncControls(); list(); document.getElementById('q').focus();
@@ -386,7 +391,6 @@ fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw 
   D = data;
   document.getElementById('demo').hidden = !D.contient_demo;
   document.getElementById('meta').textContent = `Données mises à jour le ${fdate(D.genere_le.slice(0, 10))}.`;
-  const fp = document.getElementById('foot-propose'); if (fp) fp.href = ISSUE('nouvelle-startup.yml', 'Nouvelle startup : ');
   route();
 }).catch(err => {
   view.innerHTML = `<div class="stack"><h1>Le registre n’a pas pu être chargé</h1><p>${esc(err.message)}. Réessayez dans quelques instants. En local, lancez <code>python -m http.server -d site</code> après <code>python scripts/build.py</code>.</p></div>`;
