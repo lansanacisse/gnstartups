@@ -72,13 +72,8 @@ function setFilterCount(active) {
 }
 
 /* Carte d'une startup (répertoire) */
-/* Logo de l'entreprise ; à défaut, ses initiales */
-const initials = n => n.split(/[\s-]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase();
-const logo = (s, size) => s.logo
-  ? `<img class="logo" src="${esc(s.logo)}" width="${size}" height="${size}" alt="" loading="lazy" decoding="async">`
-  : `<span class="logo logo-none" style="width:${size}px;height:${size}px;font-size:${Math.round(size * 0.38)}px" aria-hidden="true">${esc(initials(s.nom))}</span>`;
 const entryCard = s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
-   <div class="entry-head"><div class="entry-id">${logo(s, 44)}<h2>${esc(s.nom)}</h2></div>${status(s.statut_activite)}</div>
+   <div class="entry-head"><h2>${esc(s.nom)}</h2>${status(s.statut_activite)}</div>
    <p class="entry-meta">${esc(s.secteur)}, ${esc(s.ville)}${s.annee_creation ? ', créée en ' + s.annee_creation : ''}</p>
    <p class="entry-desc">${esc(s.description)}</p>${flags(s)}
    <p class="entry-foot"><span>Financement : <b>${finLabel(s)}</b></span><span>${s.date_derniere_verification ? 'Vérifiée le ' + fdate(s.date_derniere_verification) : 'Pas encore vérifiée'}</span></p></a></li>`;
@@ -154,7 +149,7 @@ function fiche(id) {
   const body = `Fiche : ${s.nom} (${location.origin}${location.pathname}#fiche-${s.id})\n\nInformation à corriger :\n\nValeur correcte :\n\nSource (lien ou explication) :\n`;
   view.innerHTML = `<div class="stack">
   <nav class="crumbs" aria-label="Fil d’Ariane"><a href="#explorer">Explorer</a><span aria-hidden="true">/</span><span aria-current="page">${esc(s.nom)}</span></nav>
-  <header class="fiche-head"><div class="fiche-id">${logo(s, 64)}<h1 tabindex="-1">${esc(s.nom)}</h1></div><p class="mute">${meta}</p><p class="lead">${esc(s.description)}</p>
+  <header class="fiche-head"><h1 tabindex="-1">${esc(s.nom)}</h1><p class="mute">${meta}</p><p class="lead">${esc(s.description)}</p>
    ${links.length ? `<p class="links">${links.join('')}</p>` : ''}${srcLine(s.sources)}</header>
   <div class="fiche">
    <aside class="side" aria-label="Statut et vérification">
