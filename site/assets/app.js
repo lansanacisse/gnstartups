@@ -23,7 +23,8 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const safeUrl = u => /^https?:\/\//.test(u || '') ? esc(u) : '#';
 const ext = (href, text, cls) => `<a${cls ? ` class="${cls}"` : ''} href="${safeUrl(href)}" target="_blank" rel="noopener noreferrer">${text}<span class="sr"> (nouvel onglet)</span></a>`;
 const lab = (k, v) => (L[k] && L[k][v] !== undefined) ? L[k][v] : v;
-const fdate = d => { if (!d) return ''; const p = d.split('-'); return parseInt(p[2], 10) + ' ' + MO[parseInt(p[1], 10) - 1] + ' ' + p[0]; };
+const PAYS = { GN: 'Guinée', FR: 'France', SN: 'Sénégal', CI: 'Côte d’Ivoire', ML: 'Mali', US: 'États-Unis', GB: 'Royaume-Uni', MA: 'Maroc', NG: 'Nigeria', GH: 'Ghana' };
+const fdate = d => { if (!d) return ''; const p = d.split('-'); return (parseInt(p[2], 10) === 1 ? '1er' : parseInt(p[2], 10)) + ' ' + MO[parseInt(p[1], 10) - 1] + ' ' + p[0]; };
 const usd = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '').replace('.', ',') + ' M$' : Math.round(n / 1000) + ' k$';
 const money = (m, dev) => m == null ? '<span class="undisclosed">Non divulgué</span>' : dev === 'USD' ? usd(m) : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(m) + ' ' + esc(dev);
 const pct = v => v == null ? '–' : String(v).replace('.', ',') + ' %';
@@ -136,8 +137,8 @@ function fiche(id) {
   if (!s) { view.innerHTML = `<div class="stack"><h1 tabindex="-1">Fiche introuvable</h1><p>Cette fiche n’existe pas ou n’est pas encore publiée.</p><p><a class="btn" href="#explorer">Retour au répertoire</a></p></div>`; return; }
   const last = s.verifications[0];
   const meta = [s.secteur, s.ville === s.region ? s.ville : `${s.ville} (région de ${s.region})`, s.annee_creation && 'créée en ' + s.annee_creation].filter(Boolean).map(esc).join(', ');
-  const facts = [['Raison sociale', s.raison_sociale], ['Forme juridique', s.forme_juridique], ['Pays d’immatriculation', s.pays_immatriculation], ['RCCM', s.rccm],
-    ['Date d’immatriculation', fdate(s.date_creation_juridique)], ['Effectif', s.effectif], ['Catégorie', lab('categorie', s.categorie)]];
+  const facts = [['Raison sociale', s.raison_sociale], ['Forme juridique', s.forme_juridique], ['Pays d’immatriculation', PAYS[s.pays_immatriculation] || s.pays_immatriculation], ['RCCM', s.rccm],
+    ['Date d’immatriculation', fdate(s.date_creation_juridique)], ['Effectif', s.effectif], ...(s.categorie !== 'startup' ? [['Catégorie', lab('categorie', s.categorie)]] : [])];
   const known = facts.filter(f => f[1]), missing = facts.filter(f => !f[1]).map(f => f[0] === 'RCCM' ? f[0] : f[0].toLowerCase());
   const links = [s.site_web && ext(s.site_web, 'Site officiel'), s.linkedin_url && ext(s.linkedin_url, 'LinkedIn'), s.x_url && ext(s.x_url, 'X'), s.facebook_url && ext(s.facebook_url, 'Facebook'), s.instagram_url && ext(s.instagram_url, 'Instagram')].filter(Boolean);
   if (!links.length) missing.unshift('site web et réseaux sociaux');
@@ -161,7 +162,6 @@ function fiche(id) {
      <p class="note">Dans le registre depuis le ${fdate(s.date_ajout)}.</p></div>
     ${ext(ISSUE('correction.yml', 'Correction : ' + s.nom, body), 'Signaler une information incorrecte', 'btn')}
     <p class="small">Vous dirigez cette startup ? ${ext(ISSUE('revendication.yml', 'Revendication de fiche : ' + s.nom), 'Revendiquer la fiche')}</p>
-    <p class="note">Les corrections sont vérifiées avant publication. Les entreprises ne modifient pas directement leur fiche.</p>
    </aside>
    <div class="fiche-main">
     <section class="section"><h2>Entreprise</h2>
@@ -183,7 +183,7 @@ function financements() {
   const known = done.filter(r => r.montant != null).length;
   const types = [...new Set(R.map(r => r.type_financement))];
   view.innerHTML = `<div class="stack">
-  <div><h1 tabindex="-1">Financements documentés</h1><p class="intro">Investissements, subventions, prix et dette, chacun avec sa source. Les montants sont affichés dans leur devise d’origine ; les totaux utilisent la contre-valeur en dollars.</p></div>
+  <div><h1 tabindex="-1">Financements documentés</h1><p class="intro">Investissements, subventions, prix et dette, chacun avec sa source. Montants dans leur devise d’origine, totaux en dollars US.</p></div>
   <p class="summary">Montant total documenté : <b>${usd(tot)}</b>${known < done.length ? ` (${done.length - known} opération${done.length - known > 1 ? 's' : ''} sans montant connu)` : ''}.</p>
   <div class="toolbar with-btn">
    <div class="filters wide-flex">
@@ -236,7 +236,7 @@ function indicateurs() {
   const by = {}; D.financements.filter(r => r.statut === 'documente').forEach(r => { const y = r.date.slice(0, 4); by[y] = (by[y] || 0) + (r.montant_usd || 0); });
   const yRows = Object.keys(by).sort().map(y => [y, by[y], usd(by[y])]);
   view.innerHTML = `<div class="stack">
-  <div><h1 tabindex="-1">Indicateurs</h1><p class="intro">La qualité du référentiel passe avant son volume. Ces chiffres sont recalculés à chaque mise à jour des données.</p></div>
+  <div><h1 tabindex="-1">Indicateurs</h1><p class="intro">Chiffres recalculés à chaque mise à jour du registre.</p></div>
   <section class="stack"><h2>Qualité des données</h2>${table(quality, 'Indicateurs de qualité des données')}</section>
   <section class="stack"><h2>Périmètre</h2>${table(scope, 'Périmètre du registre')}</section>
   <div class="cols">
@@ -244,7 +244,7 @@ function indicateurs() {
    <section class="stack"><h2>Fiches par secteur</h2>${bars(secRows, secRows.length ? secRows[0][1] : 0)}</section>
   </div>
   <section class="stack"><div><h2>Montants documentés par année</h2><p class="small mute">Contre-valeur en dollars US, opérations réalisées uniquement.</p></div>${bars(yRows, Math.max(0, ...yRows.map(r => r[1])))}</section>
-  <section class="stack" id="evolutions" tabindex="-1"><div><h2>Évolutions</h2><p class="small mute">Ajouts au registre, vérifications, levées, interruptions et fermetures, du plus récent au plus ancien. Chaque changement cite sa preuve.</p></div>${evolutionsList()}</section>
+  <section class="stack" id="evolutions" tabindex="-1"><div><h2>Évolutions</h2><p class="small mute">Chaque changement, du plus récent au plus ancien, avec sa preuve.</p></div>${evolutionsList()}</section>
   </div>`;
 }
 
@@ -265,8 +265,7 @@ function methodologie() {
   <h2>Ce que nous recensons</h2>
   <p>Une startup est une entreprise qui a une activité innovante identifiable et une ambition de croissance reproductible. Les PME traditionnelles, associations, ONG et projets étudiants n’en font pas partie. Les projets sans activité identifiable sont classés à part, comme projets précoces.</p>
   <h2>Nos règles</h2>
-  <ul><li><b>Exhaustivité progressive.</b> Nous recensons les entreprises identifiables, sans prétendre couvrir tout l’écosystème.</li>
-  <li><b>Traçabilité.</b> Chaque information importante a une source et une date de vérification.</li>
+  <ul><li><b>Traçabilité.</b> Chaque information importante a une source et une date de vérification.</li>
   <li><b>Neutralité.</b> Visibilité médiatique, activité réelle et réussite commerciale sont des choses distinctes.</li>
   <li><b>Actualisation.</b> Au-delà de 6 mois sans vérification, une fiche active est signalée « à actualiser ».</li></ul>
   <h2>Statut d’activité</h2>${defs('statut_activite')}
@@ -275,6 +274,12 @@ function methodologie() {
   <h2>Niveau de confiance</h2>${defs('niveau_confiance')}
   <h2>Types de financement</h2>${defs('type_financement')}
   <p class="small mute">« Aucune levée connue » ne veut pas dire que l’entreprise n’a jamais levé de fonds. Aucun montant n’est publié sans source.</p>
+  <h2>Autres termes</h2>
+  <dl class="defs"><dt>En levée</dt><dd>Levée de fonds annoncée par l’entreprise comme en cours, pas encore finalisée. Son montant n’entre dans les totaux qu’une fois l’opération réalisée et sourcée.</dd>
+  <dt>Complétude</dt><dd>Part des informations essentielles renseignées sur la fiche : description, secteur, ville, année de création, site web, forme juridique, effectif, page LinkedIn et fondateurs.</dd>
+  <dt>À actualiser</dt><dd>Fiche active dont la dernière vérification date de plus de 6 mois.</dd></dl>
+  <h2>Données</h2>
+  <p>L’ensemble du registre est téléchargeable librement sous licence CC BY 4.0 (voir les <a href="#cgu">conditions d’utilisation</a>) : <a href="data/registre.json" download>télécharger les données (JSON)</a>.</p>
   <h2>Contribuer</h2>
   <p>Pour corriger ou compléter le registre, passez par la page <a href="#contact">Contact</a>. Toute contribution est vérifiée avant publication.</p>
   <p class="small">Documents de référence : ${ext(gh('docs/protocole-verification.md'), 'protocole de vérification')}, ${ext(gh('docs/dictionnaire-donnees.md'), 'dictionnaire de données')}, ${ext(gh('docs/definition-startup.md'), 'définition d’une startup')}.</p>

@@ -4,18 +4,18 @@
   "enums": {
     "categorie": {
       "startup": "Entreprise innovante avec une activité identifiable et une ambition de croissance reproductible.",
-      "projet_precoce": "Projet en phase d'idée ou de prototype, sans activité commerciale identifiable. Jamais compté comme startup établie."
+      "projet_precoce": "Projet en phase d’idée ou de prototype, sans activité commerciale identifiable. Jamais compté comme startup établie."
     },
     "statut_activite": {
       "active": "Activité constatée par une preuve datée de moins de 6 mois.",
-      "interrompue": "Plusieurs signaux convergents d'arrêt (site hors ligne, contacts sans réponse...), sans déclaration de fermeture.",
-      "fermee": "Fermeture déclarée par l'entreprise, ses fondateurs ou un registre officiel.",
+      "interrompue": "Plusieurs signaux convergents d’arrêt (site hors ligne, contacts sans réponse…), sans déclaration de fermeture.",
+      "fermee": "Fermeture déclarée par l’entreprise, ses fondateurs ou un registre officiel.",
       "inconnue": "Aucune preuve suffisante pour statuer."
     },
     "statut_verification": {
       "a_verifier": "Fiche collectée, pas encore vérifiée.",
       "verifiee": "Informations essentielles confirmées selon le protocole.",
-      "contestee": "Une information est contestée par l'entreprise ou un tiers ; vérification en cours."
+      "contestee": "Une information est contestée par l’entreprise ou un tiers ; vérification en cours."
     },
     "niveau_confiance": {
       "eleve": "Confirmé par une source primaire (entreprise, registre, investisseur) ou deux sources indépendantes.",
@@ -23,21 +23,21 @@
       "faible": "Signal indirect ou source non vérifiable."
     },
     "type_source": {
-      "site_officiel": "Site web ou application de l'entreprise.",
-      "registre": "Registre officiel (APIP, RCCM, Journal officiel...).",
-      "communique": "Communiqué de l'entreprise ou d'un investisseur.",
+      "site_officiel": "Site web ou application de l’entreprise.",
+      "registre": "Registre officiel (APIP, RCCM, Journal officiel…).",
+      "communique": "Communiqué de l’entreprise ou d’un investisseur.",
       "presse": "Article de presse.",
       "entretien": "Entretien direct avec un fondateur ou un salarié.",
       "incubateur": "Information transmise par un incubateur, accélérateur ou programme.",
-      "reseau_professionnel": "Page ou publication sur un réseau professionnel (LinkedIn...).",
+      "reseau_professionnel": "Page ou publication sur un réseau professionnel (LinkedIn…).",
       "contribution": "Contribution externe reçue via le formulaire de signalement.",
       "autre": "Autre type de source, à préciser dans le titre."
     },
     "type_financement": {
-      "investissement": "Prise de participation ou instrument convertible (BSA-AIR, SAFE...).",
+      "investissement": "Prise de participation ou instrument convertible (BSA-AIR, SAFE…).",
       "subvention": "Financement non dilutif sans contrepartie en capital.",
-      "prix": "Dotation d'un prix ou d'un concours.",
-      "dette": "Prêt bancaire, prêt d'honneur, dette venture.",
+      "prix": "Dotation d’un prix ou d’un concours.",
+      "dette": "Prêt bancaire, prêt d’honneur, dette venture.",
       "autre": "Autre forme, à préciser dans les notes."
     },
     "tour": {
@@ -46,24 +46,24 @@
       "serie_a": "Série A.",
       "serie_b": "Série B.",
       "serie_c_plus": "Série C et au-delà.",
-      "non_applicable": "Pas un tour d'investissement (subvention, prix, dette).",
+      "non_applicable": "Pas un tour d’investissement (subvention, prix, dette).",
       "inconnu": "Type de tour non communiqué."
     },
     "statut_financement_operation": {
       "documente": "Opération réalisée et attestée par une source.",
-      "en_cours_declare": "Levée annoncée comme en cours par l'entreprise, non finalisée."
+      "en_cours_declare": "Levée annoncée comme en cours par l’entreprise, non finalisée."
     },
     "type_organisation": {
-      "investisseur": "Fonds, business angels, réseau d'investisseurs.",
+      "investisseur": "Fonds, business angels, réseau d’investisseurs.",
       "incubateur": "Incubateur ou accélérateur.",
-      "programme": "Programme d'appui, concours, bailleur.",
+      "programme": "Programme d’appui, concours, bailleur.",
       "entreprise": "Entreprise partenaire ou corporate.",
       "institution": "Institution publique ou internationale."
     },
     "methode_verification": {
-      "entretien": "Échange direct avec l'entreprise.",
-      "verification_en_ligne": "Contrôle du site, de l'application, des réseaux.",
-      "registre": "Consultation d'un registre officiel.",
+      "entretien": "Échange direct avec l’entreprise.",
+      "verification_en_ligne": "Contrôle du site, de l’application, des réseaux.",
+      "registre": "Consultation d’un registre officiel.",
       "tiers": "Confirmation par un incubateur, investisseur ou partenaire.",
       "visite": "Visite sur place."
     }
