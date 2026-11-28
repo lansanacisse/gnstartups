@@ -2,7 +2,7 @@
 
 Positionnement : **référence**. Priorité : **data**. StartupGuineeIQ est un data product ; le site n'est que l'interface de consultation.
 
-Le suivi opérationnel (tâches, avancement) se fait dans les [issues et jalons GitHub](https://github.com/lansanacisse/gnstartups/milestones). Ce document fixe le cap.
+Le suivi opérationnel (tâches, avancement) se fait dans les [issues et jalons GitHub](https://github.com/lansanacisse/sgiq/milestones). Ce document fixe le cap.
 
 ## Architecture par étapes
 

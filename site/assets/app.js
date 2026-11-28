@@ -1,6 +1,7 @@
 /* StartupGuineeIQ : site statique alimenté par data/registre.json (généré par scripts/build.py). */
 {
-const REPO = 'lansanacisse/gnstartups';
+/* Dépôt GitHub : fixé à la publication par le workflow (balise sg-repo) */
+const REPO = document.querySelector('meta[name="sg-repo"]')?.content || 'lansanacisse/sgiq';
 const ISSUE = (template, title, body) => `https://github.com/${REPO}/issues/new?template=${template}&title=${encodeURIComponent(title)}${body ? '&body=' + encodeURIComponent(body) : ''}`;
 
 const L = {

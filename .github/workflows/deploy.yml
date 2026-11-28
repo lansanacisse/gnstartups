@@ -29,6 +29,12 @@ jobs:
       - run: python scripts/build.py
       - name: Version des fichiers CSS et JS (évite qu'un navigateur garde l'ancienne version en cache)
         run: sed -i "s#assets/style.css\"#assets/style.css?v=${GITHUB_SHA::7}\"#; s#assets/app.js\"#assets/app.js?v=${GITHUB_SHA::7}\"#; s#assets/legal.js\"#assets/legal.js?v=${GITHUB_SHA::7}\"#; s#assets/assistant.js\"#assets/assistant.js?v=${GITHUB_SHA::7}\"#" site/index.html && grep -o 'assets/[a-z]*\.[a-z]*?v=[0-9a-f]*' site/index.html
+      - name: Adresse du site et nom du dépôt (restent justes si le dépôt est renommé)
+        run: |
+          OWNER=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
+          NAME="${GITHUB_REPOSITORY#*/}"
+          sed -i "s#https://lansanacisse.github.io/sgiq/#https://${OWNER}.github.io/${NAME}/#g; s#name=\"sg-repo\" content=\"[^\"]*\"#name=\"sg-repo\" content=\"${GITHUB_REPOSITORY}\"#" site/index.html
+          grep -E 'og:url|sg-repo' site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

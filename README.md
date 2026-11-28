@@ -2,7 +2,7 @@
 
 Intelligence de l'écosystème startup guinéen : un registre indépendant des startups, de leurs financements et de leurs fondateurs. Chaque fiche indique le statut d'activité, sa preuve et la date de la dernière vérification.
 
-Site : https://lansanacisse.github.io/gnstartups/
+Site : https://lansanacisse.github.io/sgiq/
 
 > Les données actuelles sont fictives (démonstration). Elles seront remplacées par le référentiel réel avant le lancement.
 
@@ -24,7 +24,7 @@ Les données sont des fichiers CSV dans `data/`. Leur format est décrit dans le
 2. Vérifier que `python scripts/validate.py` affiche 0 erreur.
 3. Ouvrir une pull request. Une fois fusionnée, le site se met à jour tout seul.
 
-Pour proposer une startup ou signaler une erreur sans toucher aux fichiers : [ouvrir une issue](https://github.com/lansanacisse/gnstartups/issues/new/choose).
+Pour proposer une startup ou signaler une erreur sans toucher aux fichiers : [ouvrir une issue](https://github.com/lansanacisse/sgiq/issues/new/choose).
 
 ## Documentation
 
