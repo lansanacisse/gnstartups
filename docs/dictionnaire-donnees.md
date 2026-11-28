@@ -82,6 +82,7 @@ Fichier : `data/startups.csv`
 | `x_url` | URL | non | Compte X (Twitter) officiel. |
 | `facebook_url` | URL | non | Page Facebook officielle. |
 | `instagram_url` | URL | non | Compte Instagram officiel. |
+| `logo` | texte | non | Nom du fichier du logo dans data/logos/ (SVG, PNG ou WebP, 200 Ko au plus). Le logo reste la propriété de l'entreprise et sert seulement à l'identifier. |
 | `raison_sociale` | texte | non | Dénomination juridique. |
 | `forme_juridique` | texte | non | SARL, SARLU, SA, SAS... |
 | `pays_immatriculation` | texte | non | Code pays ISO 3166-1 alpha-2 de l'entité juridique principale. |

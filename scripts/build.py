@@ -6,6 +6,7 @@ Lancer validate.py avant : build.py suppose un référentiel valide.
 from __future__ import annotations
 
 import json
+import shutil
 from datetime import date, datetime, timezone
 
 from sg import FRESHNESS_DAYS, ROOT, load_all, load_schema, today
@@ -70,6 +71,7 @@ def main():
             "ville": villes[s["ville_id"]]["nom"], "ville_id": s["ville_id"], "region": villes[s["ville_id"]]["region"],
             "annee_creation": s["annee_creation"], "site_web": s["site_web"], "linkedin_url": s["linkedin_url"],
             "x_url": s["x_url"], "facebook_url": s["facebook_url"], "instagram_url": s["instagram_url"],
+            "logo": f"data/logos/{s['logo']}" if s["logo"] else "",
             "raison_sociale": s["raison_sociale"], "forme_juridique": s["forme_juridique"],
             "pays_immatriculation": s["pays_immatriculation"], "rccm": s["rccm"],
             "date_creation_juridique": s["date_creation_juridique"], "effectif": s["effectif"],
@@ -138,6 +140,13 @@ def main():
         "evenements": all_events,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    # Logos des fiches publiées, copiés à côté du registre
+    logos = OUT.parent / "logos"
+    shutil.rmtree(logos, ignore_errors=True)
+    logos.mkdir()
+    for s in startups:
+        if s["logo"]:
+            shutil.copy2(ROOT / s["logo"], logos / s["logo"].rsplit("/", 1)[1])
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{OUT.relative_to(ROOT)} : {len(startups)} fiches publiées, {len(all_rounds)} financements, {len(all_events)} événements.")
 

@@ -268,6 +268,12 @@
           "description": "Compte Instagram officiel."
         },
         {
+          "name": "logo",
+          "type": "text",
+          "required": false,
+          "description": "Nom du fichier du logo dans data/logos/ (SVG, PNG ou WebP, 200 Ko au plus). Le logo reste la propriété de l'entreprise et sert seulement à l'identifier."
+        },
+        {
           "name": "raison_sociale",
           "type": "text",
           "required": false,

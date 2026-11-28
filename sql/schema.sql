@@ -81,6 +81,7 @@ create table startups (
   x_url text check (x_url ~ '^https?://'),
   facebook_url text check (facebook_url ~ '^https?://'),
   instagram_url text check (instagram_url ~ '^https?://'),
+  logo text,
   raison_sociale text,
   forme_juridique text,
   pays_immatriculation text,
@@ -111,6 +112,7 @@ comment on column startups.linkedin_url is 'Page LinkedIn de l''entreprise.';
 comment on column startups.x_url is 'Compte X (Twitter) officiel.';
 comment on column startups.facebook_url is 'Page Facebook officielle.';
 comment on column startups.instagram_url is 'Compte Instagram officiel.';
+comment on column startups.logo is 'Nom du fichier du logo dans data/logos/ (SVG, PNG ou WebP, 200 Ko au plus). Le logo reste la propriété de l''entreprise et sert seulement à l''identifier.';
 comment on column startups.raison_sociale is 'Dénomination juridique.';
 comment on column startups.forme_juridique is 'SARL, SARLU, SA, SAS...';
 comment on column startups.pays_immatriculation is 'Code pays ISO 3166-1 alpha-2 de l''entité juridique principale.';
