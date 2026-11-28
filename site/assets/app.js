@@ -75,8 +75,8 @@ const entryCard = s => `<li><a class="entry" href="#fiche-${esc(s.id)}">
    <p class="entry-foot"><span>Financement : <b>${finLabel(s)}</b></span><span>${s.date_derniere_verification ? 'Vérifiée le ' + fdate(s.date_derniere_verification) : 'Pas encore vérifiée'}</span></p></a></li>`;
 
 /* Répertoire */
-const STATUTS = [['tous', 'Toutes'], ['active', 'Actives'], ['levee', 'En levée'], ['interrompue', 'Interrompues'], ['fermee', 'Fermées'], ['a_verifier', 'À vérifier']];
-const matchStatut = (s, k) => k === 'tous' || (k === 'levee' ? s.statut_financement === 'en_cours_declare' : k === 'a_verifier' ? s.statut_verification !== 'verifiee' : s.statut_activite === k);
+const STATUTS = [['tous', 'Toutes'], ['active', 'Actives'], ['levee', 'En levée'], ['interrompue', 'Interrompues'], ['fermee', 'Fermées']];
+const matchStatut = (s, k) => k === 'tous' || (k === 'levee' ? s.statut_financement === 'en_cours_declare' : s.statut_activite === k);
 
 function repertoire() {
   const S = D.startups;
