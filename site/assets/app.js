@@ -396,4 +396,6 @@ fetch('data/registre.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw 
 }).catch(err => {
   view.innerHTML = `<div class="stack"><h1>Le registre n’a pas pu être chargé</h1><p>${esc(err.message)}. Réessayez dans quelques instants. En local, lancez <code>python -m http.server -d site</code> après <code>python scripts/build.py</code>.</p></div>`;
 });
+/* Fonctions partagées avec l'assistant (assets/assistant.js) */
+window.SGA = { get D() { return D; }, esc, fdate, usd, lab };
 }

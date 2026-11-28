@@ -49,6 +49,7 @@ function sgLegal(ext) {
   <ul>
    <li>Aucun cookie, aucun traceur, aucune mesure d’audience, aucune publicité (voir la ${link('cookies', 'gestion des cookies')}).</li>
    <li>Aucune revente ni cession de données.</li>
+   <li>L’assistant du registre fonctionne entièrement dans votre navigateur : vos questions ne sont ni envoyées ni conservées.</li>
    <li>Aucun appel à un service tiers pour afficher le site : la police de caractères est hébergée sur le site lui-même.</li>
   </ul>
   <h2>Vos droits</h2>
