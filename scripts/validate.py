@@ -104,6 +104,31 @@ def check_refs(schema: dict, data: dict, rep: Report):
     return ids
 
 
+LOGO_DIR = ROOT / "data" / "logos"
+LOGO_EXT = (".svg", ".png", ".webp")
+LOGO_MAX = 200 * 1024
+
+
+def check_logos(data: dict, rep: Report):
+    """Chaque logo indiqué existe dans data/logos/, au bon format, sans contenu actif."""
+    for i, s in enumerate(data["startups"], start=2):
+        name = s.get("logo")
+        if not name:
+            continue
+        where = f"data/startups.csv:{i}"
+        path = LOGO_DIR / name
+        if "/" in name or "\\" in name or not name.lower().endswith(LOGO_EXT):
+            rep.err(where, f"logo « {name} » : nom de fichier simple attendu, en {', '.join(LOGO_EXT)}")
+        elif not path.is_file():
+            rep.err(where, f"logo « {name} » introuvable dans data/logos/")
+        elif path.stat().st_size > LOGO_MAX:
+            rep.err(where, f"logo « {name} » trop lourd (200 Ko au plus)")
+        elif name.lower().endswith(".svg"):
+            svg = path.read_text(encoding="utf-8", errors="replace").lower()
+            if any(k in svg for k in ("<script", "javascript:", "<foreignobject", " onload", " onclick", "href=\"http")):
+                rep.err(where, f"logo « {name} » : le SVG ne doit contenir ni script ni ressource externe")
+
+
 def check_rules(data: dict, ids: dict, rep: Report, strict: bool):
     t = today()
     by_startup: dict[str, list[dict]] = {}
@@ -177,6 +202,7 @@ def main() -> int:
         data = load_all(schema)
         ids = check_refs(schema, data, rep)
         check_rules(data, ids, rep, strict)
+        check_logos(data, rep)
     for w in rep.warnings:
         print(f"AVERTISSEMENT  {w}")
     for e in rep.errors:
