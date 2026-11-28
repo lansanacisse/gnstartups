@@ -53,7 +53,7 @@ function sgLegal(ext) {
    <li>Aucun cookie, aucun traceur, aucune mesure d’audience, aucune publicité (voir la ${link('cookies', 'gestion des cookies')}).</li>
    <li>Aucune revente ni cession de données.</li>
    <li>L’assistant du registre fonctionne entièrement dans votre navigateur : vos questions ne sont ni envoyées ni conservées.</li>
-   <li>Aucun appel à un service tiers pour afficher le site : la police de caractères est hébergée sur le site lui-même.</li>
+   <li>Aucun appel à un service tiers pour afficher le site.</li>
   </ul>
   <h2>Vos droits</h2>
   <p>Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation et d’opposition sur les données qui vous concernent. Pour les exercer, écrivez à ${mail} en précisant la fiche concernée. Une réponse vous sera apportée dans un délai d’un mois.</p>
@@ -109,8 +109,6 @@ function sgLegal(ext) {
   <ul>
    <li><b>Noms, marques et logos des startups</b> : ils appartiennent à leurs titulaires et ne sont cités que pour identifier les entreprises.</li>
    <li><b>Sources citées</b> (articles, communiqués, pages web) : elles restent la propriété de leurs auteurs. Le registre n’en reproduit que le titre et le lien.</li>
-   <li><b>Police de caractères</b> : Inter, sous licence SIL Open Font License 1.1.</li>
-   <li><b>Code du site</b> : il n’est pas publié sous licence ouverte.</li>
   </ul>
   <h2>Signaler une atteinte</h2>
   <p>Si vous estimez qu’un contenu du site porte atteinte à vos droits, écrivez à ${mail} en précisant le contenu concerné et vos droits. Il sera examiné selon la ${link('signalements', 'gestion des signalements')}.</p>`
