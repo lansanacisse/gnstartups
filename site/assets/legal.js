@@ -5,6 +5,9 @@ const SG_LEGAL_UPDATED = '27 novembre 2026';
 
 const SG_MAIL = SG_CONTACT ? `<a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a>` : 'l’adresse indiquée sur la page <a href="#contact">Contact</a>';
 
+/* Adresse du site, lue dans la barre d’adresse : reste juste si le dépôt change de nom */
+const SG_SITE = location.host + location.pathname.replace(/index\.html$/, '').replace(/\/$/, '');
+
 function sgLegal(ext) {
   const mail = SG_MAIL;
   const link = (hash, text) => `<a href="#${hash}">${text}</a>`;
@@ -13,7 +16,7 @@ function sgLegal(ext) {
       title: 'Mentions légales',
       html: `
   <h2>Éditeur</h2>
-  <p>Le site StartupGuineeIQ (lansanacisse.github.io/gnstartups) est édité à titre non professionnel par une personne physique. Conformément à l’article 1-1, II de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique (LCEN), l’éditeur a choisi de préserver son anonymat à l’égard du public. Ses éléments d’identification ont été communiqués à l’hébergeur.</p>
+  <p>Le site StartupGuineeIQ (${SG_SITE}) est édité à titre non professionnel par une personne physique. Conformément à l’article 1-1, II de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l’économie numérique (LCEN), l’éditeur a choisi de préserver son anonymat à l’égard du public. Ses éléments d’identification ont été communiqués à l’hébergeur.</p>
   <p>Le site ne vend aucun produit ni service et ne contient pas de publicité.</p>
   <h2>Contact</h2>
   <p>Pour toute question, demande ou réclamation : ${mail}.</p>
@@ -101,7 +104,7 @@ function sgLegal(ext) {
   <h2>Données et textes du registre : licence CC BY 4.0</h2>
   <p>Les données du registre (fiches, statuts, financements, vérifications, indicateurs) et les textes rédigés pour le site (méthodologie, définitions) sont publiés sous la licence ${ext('https://creativecommons.org/licenses/by/4.0/deed.fr', 'Creative Commons Attribution 4.0 International (CC BY 4.0)')}.</p>
   <p>Vous pouvez les copier, les diffuser, les adapter et les réutiliser, y compris à des fins commerciales, à condition de citer la source, d’indiquer si vous les avez modifiés et de ne pas laisser croire que StartupGuineeIQ approuve votre usage.</p>
-  <p>Mention à utiliser : <b>« Source : StartupGuineeIQ, lansanacisse.github.io/gnstartups, données consultées le [date] »</b>.</p>
+  <p>Mention à utiliser : <b>« Source : StartupGuineeIQ, ${SG_SITE}, données consultées le [date] »</b>.</p>
   <h2>Ce qui n’est pas couvert par cette licence</h2>
   <ul>
    <li><b>Noms, marques et logos des startups</b> : ils appartiennent à leurs titulaires et ne sont cités que pour identifier les entreprises.</li>
