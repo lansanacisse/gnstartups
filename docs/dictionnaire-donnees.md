@@ -260,7 +260,7 @@ Fichier : `data/evenements.csv`
 | `subvention` | Financement non dilutif sans contrepartie en capital. |
 | `prix` | Dotation d’un prix ou d’un concours. |
 | `dette` | Prêt bancaire, prêt d’honneur, dette venture. |
-| `autre` | Autre forme, à préciser dans les notes. |
+| `autre` | Autre forme de financement. |
 
 ### Liste tour
 

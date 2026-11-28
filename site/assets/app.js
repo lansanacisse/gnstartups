@@ -155,7 +155,7 @@ function fiche(id) {
   <div class="fiche">
    <aside class="side" aria-label="Statut et vérification">
     <div class="panel">${status(s.statut_activite)}${flags(s)}
-     ${last ? `<p>${esc(last.resume)}</p><p class="small mute">Vérifiée ${esc(VERIF_HOW[last.methode] || '')} le ${fdate(last.date)}.</p>` : '<p class="mute">Cette fiche n’a pas encore été vérifiée.</p>'}
+     ${last ? `<p>${esc(last.resume)}</p>${s.statut_verification === 'verifiee' ? `<p class="small mute">Vérifiée ${esc(VERIF_HOW[last.methode] || '')} le ${fdate(last.date)}.</p>` : ''}` : '<p class="mute">Cette fiche n’a pas encore été vérifiée.</p>'}
      ${s.a_actualiser ? '<p class="small">La dernière vérification date de plus de 6 mois : la fiche est à actualiser.</p>' : ''}
      <dl class="kv"><dt>Niveau de confiance</dt><dd>${esc(lab('niveau_confiance', s.niveau_confiance))}</dd></dl>
      <div><dl class="kv"><dt>Complétude</dt><dd>${pct(s.completude)}</dd></dl><div class="meter" aria-hidden="true"><i style="width:${Number(s.completude) || 0}%"></i></div></div>
@@ -169,7 +169,7 @@ function fiche(id) {
      ${missing.length ? `<p class="note">Non renseigné : ${esc(missing.join(', '))}.</p>` : ''}</section>
     <section class="section"><h2>Fondateurs</h2>${s.fondateurs.length ? `<ul class="rows">${s.fondateurs.map(f => `<li><div><p><b>${esc(f.nom)}</b>, ${esc(f.role)}</p>${srcLine(f.sources)}</div>${f.linkedin_url ? ext(f.linkedin_url, 'LinkedIn') : ''}</li>`).join('')}</ul>` : '<p class="mute">Fondateurs non renseignés.</p>'}</section>
     <section class="section"><div class="section-head"><h2>Financements</h2><span class="small mute">${esc(lab('statut_financement', s.statut_financement))}</span></div>
-     ${s.financements.length ? `<ul class="rows">${s.financements.map(r => `<li><div><p><b>${kind(r)}</b>, ${fdate(r.date)}${r.statut === 'en_cours_declare' ? ' ' + flag('En cours', 'fl-info') : ''}</p><p class="small mute">${esc(r.investisseurs.join(', ') || 'Financeurs non communiqués')}</p>${r.notes ? `<p class="small">${esc(r.notes)}</p>` : ''}${srcLine(r.sources)}</div><span class="amount">${money(r.montant, r.devise)}</span></li>`).join('')}</ul>` : '<p class="mute">Aucune levée connue. Cela ne signifie pas que l’entreprise n’a jamais levé de fonds.</p>'}</section>
+     ${s.financements.length ? `<ul class="rows">${s.financements.map(r => `<li><div><p><b>${kind(r)}</b>, ${fdate(r.date)}${r.statut === 'en_cours_declare' ? ' ' + flag('En cours', 'fl-info') : ''}</p><p class="small mute">${esc(r.investisseurs.join(', ') || 'Financeurs non communiqués')}</p>${r.notes ? `<p class="small">${esc(r.notes)}</p>` : ''}${srcLine(r.sources)}</div><span class="amount">${money(r.montant, r.devise)}</span></li>`).join('')}</ul>` : '<p class="mute">Cela ne signifie pas que l’entreprise n’a jamais levé de fonds.</p>'}</section>
     ${s.accompagnements.length ? `<section class="section"><h2>Accompagnement</h2><ul class="rows">${s.accompagnements.map(a => `<li><div><p><b>${esc(a.organisation)}</b>${a.programme ? ', ' + esc(a.programme) : ''}${a.annee ? ' (' + a.annee + ')' : ''}</p>${srcLine(a.sources)}</div></li>`).join('')}</ul></section>` : ''}
     <section class="section"><h2>Historique</h2>${hist.length ? `<ol class="tl">${hist.map(h => `<li><p class="when">${fdate(h.date)}</p>${h.html}</li>`).join('')}</ol>` : '<p class="mute">Aucun autre événement enregistré.</p>'}</section>
    </div></div></div>`;
@@ -236,7 +236,7 @@ function indicateurs() {
   const by = {}; D.financements.filter(r => r.statut === 'documente').forEach(r => { const y = r.date.slice(0, 4); by[y] = (by[y] || 0) + (r.montant_usd || 0); });
   const yRows = Object.keys(by).sort().map(y => [y, by[y], usd(by[y])]);
   view.innerHTML = `<div class="stack">
-  <div><h1 tabindex="-1">Indicateurs</h1><p class="intro">Chiffres recalculés à chaque mise à jour du registre.</p></div>
+  <div><h1 tabindex="-1">Indicateurs</h1></div>
   <section class="stack"><h2>Qualité des données</h2>${table(quality, 'Indicateurs de qualité des données')}</section>
   <section class="stack"><h2>Périmètre</h2>${table(scope, 'Périmètre du registre')}</section>
   <div class="cols">
@@ -258,7 +258,6 @@ function evolutionsList() {
 function methodologie() {
   const d = D.definitions;
   const defs = k => `<dl class="defs">${Object.entries(d[k]).map(([v, t]) => `<dt>${esc(lab(k, v)).replace(/^./, c => c.toUpperCase())}</dt><dd>${esc(t)}</dd>`).join('')}</dl>`;
-  const gh = p => `https://github.com/${REPO}/blob/main/${p}`;
   view.innerHTML = `<article class="prose">
   <h1 tabindex="-1">Méthodologie</h1>
   <p>Comment les startups sont choisies, comment chaque information est vérifiée et ce que signifie chaque statut.</p>
@@ -282,7 +281,6 @@ function methodologie() {
   <p>L’ensemble du registre est téléchargeable librement sous licence CC BY 4.0 (voir les <a href="#cgu">conditions d’utilisation</a>) : <a href="data/registre.json" download>télécharger les données (JSON)</a>.</p>
   <h2>Contribuer</h2>
   <p>Pour corriger ou compléter le registre, passez par la page <a href="#contact">Contact</a>. Toute contribution est vérifiée avant publication.</p>
-  <p class="small">Documents de référence : ${ext(gh('docs/protocole-verification.md'), 'protocole de vérification')}, ${ext(gh('docs/dictionnaire-donnees.md'), 'dictionnaire de données')}, ${ext(gh('docs/definition-startup.md'), 'définition d’une startup')}.</p>
   </article>`;
 }
 
@@ -302,8 +300,6 @@ function apropos() {
   <ul><li>Noter ou classer les startups.</li>
   <li>Donner des conseils d’investissement.</li>
   <li>Laisser une entreprise payer pour figurer au registre ou modifier sa fiche.</li></ul>
-  <h2>Où en est le projet</h2>
-  <p>Le référentiel est en cours de constitution. Les startups affichées aujourd’hui sont des données de démonstration fictives : elles seront remplacées par des fiches réelles et vérifiées avant le lancement public.</p>
   <h2>En savoir plus</h2>
   <p>La façon dont les informations sont collectées et vérifiées est décrite dans la <a href="#methodologie">méthodologie</a>. Pour toute question, consultez la page <a href="#contact">contact</a>.</p>
   </article>`;
@@ -315,8 +311,7 @@ function contact() {
   const write = hasMail
     ? `<p><a href="mailto:${SG_CONTACT}">${SG_CONTACT}</a></p>
   <p>Pour une question sur le registre, une demande presse ou partenariat, l’exercice de vos droits sur vos données personnelles, ou un signalement confidentiel. Nous répondons en général sous 7 jours.</p>`
-    : `<p>L’adresse de contact du projet est en cours de création. En attendant :</p>
-  <ul><li>pour une question, une demande presse ou partenariat, ${ext(`https://github.com/${REPO}/issues/new/choose`, 'ouvrez une demande sur GitHub')} ;</li>
+    : `<ul><li>Pour une question, une demande presse ou partenariat, ${ext(`https://github.com/${REPO}/issues/new/choose`, 'ouvrez une demande sur GitHub')} ;</li>
   <li>pour une demande confidentielle (données personnelles, contenu illicite), ouvrez une demande en écrivant seulement « Demande confidentielle », sans aucun détail : nous vous indiquerons comment nous la transmettre en privé.</li></ul>`;
   view.innerHTML = `<article class="prose">
   <h1 tabindex="-1">Contact</h1>
